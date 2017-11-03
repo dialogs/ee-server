@@ -1,0 +1,49 @@
+---
+# Main
+project_name: "My Dialog"
+base_url: "localhost:9090"
+
+# Databases
+history_storage: "postgresql"
+sequence_storage: "cassandra"
+persistence_journal: "cassandra-journal"
+persistence_snapshot: "cassandra-snapshot-store"
+
+# PG
+pg_host: "postgresql"
+pg_port: 5432
+pg_db: "dialog"
+pg_user: "dialog"
+pg_password: "dialog"
+pg_numThreads: 16
+
+# Cassandra
+cass_contact_points:
+  - cassandra
+cass_username: ""
+cass_password: ""
+
+# SMTP
+smtp_use: false #true/false dynamic matched
+smtp_host: ""
+smtp_port: ""
+smtp_from: ""
+smtp_user: ""
+smtp_password: ""
+smtp_tls:
+
+# AD
+ad_use: false #true/false dynamic matched
+ad_host: ""
+ad_port: ""
+ad_domain: ""
+ad_user: ""
+ad_password: ""
+ad_sync: "10s"
+
+# S3
+aws_use: false #true/false dynamic matched
+aws_endpoint: ""
+aws_bucket: ""
+aws_access: ""
+aws_secret: ""

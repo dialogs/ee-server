@@ -1,0 +1,111 @@
+server {
+  listen 80;
+  server_name                 {{ base_url }};
+{%if use_tls %}
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  server_name                 {{ base_url }};
+  client_max_body_size 100m;
+
+  ssl on;
+{%if use_letsencrypt %}
+  ssl_certificate             /etc/letsencrypt/live/{{ base_url }}/fullchain.pem;
+  ssl_certificate_key         /etc/letsencrypt/live/{{ base_url }}/privkey.pem;
+{% endif %}
+  ssl_protocols               TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers                 EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH;
+  ssl_prefer_server_ciphers   on;
+  ssl_session_cache           shared:SSL:10m;
+  ssl_session_timeout         10m;
+  ssl_stapling                on;
+  ssl_stapling_verify         on;
+{% endif %}
+  access_log                  /var/log/nginx/dialog/access.log comb;
+  error_log                   /var/log/nginx/dialog/error.log;
+
+  keepalive_timeout           70;
+  resolver                    8.8.4.4 8.8.8.8 valid=300s;
+  resolver_timeout            10s;
+  add_header                  Strict-Transport-Security 'max-age=31536000; includeSubDomains';
+  add_header                  X-Frame-Options DENY;
+  add_header                  X-Content-Type-Options nosniff;
+
+  location / {
+    proxy_read_timeout        10s;
+    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass                http://localhost:{{ web_app_port }};
+  }
+
+  location /dash {
+    proxy_set_header          Host {{ base_url }};
+    rewrite                   ^/dash$ {{ http_scheme }}://{{ base_url }}/dash/ permanent;
+    rewrite                   ^/dash/(.*) /$1 break;
+    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass                http://localhost:{{ dashboard_port }}/;
+  }
+
+  location /config {
+    proxy_set_header          Host {{ base_url }};
+    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass                http://localhost:{{ dashboard_port }};
+  }
+
+  location /v1 {
+    proxy_set_header          Host {{ base_url }};
+    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass                http://localhost:9090;
+  }
+
+  location /api {
+    proxy_set_header          Host {{ base_url }};
+    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass                http://localhost:9090;
+  }
+}
+
+server {
+{%if use_tls %}
+  listen {{ ws_port }} ssl;
+{% else %}
+  listen {{ ws_port }};
+{% endif %}
+
+  server_name                 {{ base_url }};
+  client_max_body_size        100m;
+{%if use_tls %}
+  ssl on;
+{%if use_letsencrypt %}
+  ssl_certificate             /etc/letsencrypt/live/{{ base_url }}/fullchain.pem;
+  ssl_certificate_key         /etc/letsencrypt/live/{{ base_url }}/privkey.pem;
+{% endif %}
+  ssl_protocols               TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers                 EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH;
+  ssl_prefer_server_ciphers   on;
+  ssl_session_cache           shared:SSL:10m;
+  ssl_session_timeout         10m;
+  ssl_stapling                on;
+  ssl_stapling_verify         on;
+{% endif %}
+  access_log                  /var/log/nginx/dialog/access.log comb;
+  error_log                   /var/log/nginx/dialog/error.log;
+
+  keepalive_timeout           70;
+  resolver                    8.8.4.4 8.8.8.8 valid=300s;
+  resolver_timeout            10s;
+  add_header                  Strict-Transport-Security 'max-age=31536000; includeSubDomains';
+  add_header                  X-Frame-Options DENY;
+  add_header                  X-Content-Type-Options nosniff;
+
+  location / {
+    proxy_read_timeout        10s;
+    proxy_http_version        1.1;
+    proxy_set_header          Upgrade $http_upgrade;
+    proxy_set_header          Connection "upgrade";
+    proxy_pass                http://localhost:9080;
+  }
+}

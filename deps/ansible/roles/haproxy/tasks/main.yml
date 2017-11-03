@@ -1,0 +1,47 @@
+---
+- name: 'Add haproxy apt repo (squeeze)'
+  apt_repository:
+    repo: deb http://http.debian.net/debian {{ ansible_distribution_release }}-backports-sloppy main
+    state: present
+    update_cache: yes
+  when: ansible_distribution_release == 'squeeze'
+
+- name: Add haproxy apt repo (wheezy/jessie)
+  apt_repository:
+    repo: deb http://http.debian.net/debian {{ ansible_distribution_release }}-backports main
+    state: present
+    update_cache: yes
+  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie'
+
+- name: Install HAProxy (apt squeeze)
+  apt:
+    name: "{{ haproxy_package_name }}"
+    default_release: "{{ansible_distribution_release}}-backports-sloppy"
+  when: ansible_distribution_release == 'squeeze'
+
+- name: Install HAProxy (apt wheezy/jessie)
+  apt:
+    name: "haproxy"
+    default_release: "{{ansible_distribution_release}}-backports"
+  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie'
+
+- name: Install HAProxy (apt stretch)
+  apt:
+    name: "haproxy"
+    default_release: "{{ansible_distribution_release}}-backports"
+  when: ansible_distribution_release == 'stretch'
+
+- include_tasks: letsencrypt_certs.yml
+  when: use_letsencrypt and use_tls
+
+- name: Create HA config
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+  tags: ha_reconf
+
+- name: 'Enable it'
+  service:
+    name: haproxy
+    enabled: yes

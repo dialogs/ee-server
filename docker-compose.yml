@@ -1,0 +1,47 @@
+version: '2'
+services:
+  postgresql:
+    image: dialog-docker-public-registry.bintray.io/postgresql:9.6
+    volumes:
+      - ./data/pg:/var/lib/postgresql
+
+  cassandra:
+    image: cassandra:3.10
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+
+  coturn:
+    image: dialog-docker-public-registry.bintray.io/coturn:latest
+    network_mode: host
+    ports:
+      - 3478:3478/udp
+      - 3478:3478
+      - 10000-10100:10000-10100
+      - 10000-10100:10000-10100/udp
+
+  dialog-server:
+    image: dialog-docker-ee-registry.bintray.io/server:1.13.4
+    volumes:
+      - ./conf:/opt/docker/conf:ro
+      - ./data/server/files:/storage/files
+    ports:
+      - 127.0.0.1:9090:9090
+      - 127.0.0.1:9080:9080
+      - 127.0.0.1:9070:9070
+    links:
+      - postgresql
+      - cassandra
+
+  web-app:
+    image: dialog-docker-ee-registry.bintray.io/web-app:latest
+    ports:
+      - 127.0.0.1:8081:80
+
+  dashboard:
+    image: dialog-docker-ee-registry.bintray.io/dashboard:latest
+    environment:
+      - ENDPOINT=http://dialog-server:9090
+    ports:
+      - 127.0.0.1:8082:3000
+    links:
+      - dialog-server

@@ -1,0 +1,39 @@
+---
+- set_fact:
+    http_scheme: "https"
+    tcp_scheme: "tls"
+    ws_scheme: "wss"
+  when: use_tls
+
+- set_fact:
+    conf_dir: "{{ playbook_dir }}/../../conf"
+
+- name: Create conf dir if not exist
+  file:
+    path: "{{ conf_dir }}"
+    state: directory
+
+- name: Configure SMTP
+  set_fact:
+    smtp_use: true
+  when: smtp_password != "" and smtp_host != "" and smtp_port != "" and smtp_from != "" and smtp_user != ""
+
+- name: Configure Acitve Directory
+  set_fact:
+    ad_use: true
+  when: ad_host != "" and ad_port != "" and ad_domain != "" and ad_user != "" and ad_password != ""
+
+- name: Configure AWS
+  set_fact:
+    aws_use: true
+  when: aws_endpoint != "" and aws_bucket != "" and aws_access != "" and aws_secret != ""
+
+- name: Create server.conf
+  template:
+    src: templates/server.conf.j2
+    dest: "{{ conf_dir }}/server.conf"
+
+- name: Create logback.xml
+  template:
+    src: templates/logback.xml
+    dest: "{{ conf_dir }}/logback.xml"

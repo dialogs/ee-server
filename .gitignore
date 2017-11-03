@@ -1,0 +1,6 @@
+./docker-compose.yml
+./vars.yml
+data/
+client/
+images/
+conf/

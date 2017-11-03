@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: packages
+      tags: 'always'
+
+    - role: docker
+      tags: 'docker'
+
+    - role: docker-compose
+      tags: 'docker-compose'
+
+    - role: nginx
+      dhparam_size: 1024
+      dhparam_file: "/etc/ssl/dhparam.pem"
+      tags: 'nginx'
+
+    - role: letsencrypt
+      letsencrypt_domain: "{{ base_url }}"
+      letsencrypt_pause_services:
+        - nginx
+      when: use_letsencrypt and use_tls
+      tags: 'letsencrypt'
+
+    - role: haproxy
+      frontend_mode: 'tcp'
+      backend_server: '127.0.0.1:9070'
+      tags: 'haproxy'
+
+    - role: dlg-compose
+      tags: 'dlg-compose'
+
+    - role: dlg-config
+      tags: 'dlg-config'

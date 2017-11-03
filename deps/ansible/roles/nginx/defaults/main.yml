@@ -1,0 +1,29 @@
+---
+certs: no
+nginx_binary_name: "nginx"
+nginx_service_name: "{{nginx_binary_name}}"
+nginx_user: "www-data"
+nginx_group: "{{nginx_user}}"
+nginx_worker_processes: "{% if ansible_processor_vcpus is defined %}{{ ansible_processor_vcpus }}{% else %}auto{% endif %}"
+nginx_pid_file: '/var/run/{{nginx_service_name}}.pid'
+nginx_worker_rlimit_nofile: 1024
+nginx_conf_dir: "/etc/nginx"
+nginx_log_dir: "/var/log/nginx"
+nginx_error_log_level: "error"
+nginx_ssl_dir: "/etc/nginx/ssl"
+
+nginx_extra_root_params: []
+nginx_events_params:
+  - worker_connections {% if nginx_max_clients is defined %}{{nginx_max_clients}}{% else %}512{% endif %}
+nginx_http_params: "{{ nginx_http_default_params }}"
+
+nginx_daemon_mode: "on"
+
+
+dhparam_size: 4096
+dhparam_file: "/etc/ssl/dhparam-{{ dhparams_size }}.pem"
+
+# Use a cronjob to update DH params regularly
+dhparam_update_enabled: false
+# (daily, weekly, monthly, annually)
+dhparam_update_interval: weekly

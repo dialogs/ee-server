@@ -1,0 +1,13 @@
+---
+- stat:
+    path: '/etc/letsencrypt/live/{{ base_url }}/fullchain.pem'
+  register: cert_file
+
+- include_tasks: client.yaml
+  when: not cert_file.stat.exists and use_letsencrypt and use_tls
+
+- include_tasks: cert.yaml
+  when: not cert_file.stat.exists and use_letsencrypt and use_tls
+
+- include_tasks: test.yaml
+  when: letsencrypt_test

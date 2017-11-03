@@ -1,0 +1,47 @@
+### Dialog Server ###
+# Main
+project_name: "My EE"
+base_url: "example.com"
+
+# SMTP
+smtp_host: ""
+smtp_port: ""
+smtp_from: ""
+smtp_user: ""
+smtp_password: ""
+smtp_tls: # true/false
+
+# AD
+ad_host: ""
+ad_port: ""
+ad_domain: ""
+ad_user: ""
+ad_password: ""
+ad_sync: "10s"
+
+# S3
+aws_endpoint: ""
+aws_bucket: ""
+aws_access: ""
+aws_secret: ""
+
+### port binds ###
+# localhost bindings
+# localhost:[9090, 9080, 9070] reserverd for dlg-server
+web_app_port:   8080
+invites_port:   8081
+dashboard_port: 8082
+
+# wide binds
+ws_port: 8443
+tcp_port: 7443
+
+### SSL  ###
+# STRONG RECOMENTED use it
+use_tls: true
+
+use_letsencrypt: true
+letsencrypt_email: email@example.com
+
+
+# self_signed_cert: TODO

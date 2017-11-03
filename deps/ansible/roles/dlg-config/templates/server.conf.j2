@@ -1,0 +1,126 @@
+# General
+project-name = "{{ project_name }}"
+http.base-uri = "{{ http_scheme }}://{{ base_url }}"
+
+
+# Secure
+secret = "mysupersecuresecret"
+modules.security.server-keys.0.public = "/opt/docker/keys/dialog.pub"
+modules.security.server-keys.0.private = "/opt/docker/keys/dialog.private"
+
+modules.crypto.server-key.secret = "a7a91bbe84f15da821a5421d2a96c93c575138dee2bbaca11a818e5aeed72a49"
+modules.crypto.server-key.public = "f61788dd49d78f061a48adf45128be1693f6099c52d3cb9ae69f87b7ba11620c"
+modules.crypto.storage = "cassandra"
+
+# Tools
+modules.metrics.consumers = ["im.dlg.metrics.PrometheusConsumer"]
+modules.admin.extension = "im.dlg.server.admin.AdminExtension"
+
+#modules.groups.invite-domain = "{{ http_scheme }}://{{ base_url }}"
+#modules.groups.invite-url-prefix = "/@/joinchat/"
+#modules.groups.resolve-url-preifx = "/@"
+
+
+# Clustering
+single-mode = true
+modules.reconfiguration.storage = im.dlg.server.config.contrib.NoOpStorage
+
+
+# Files
+modules.files.adapter = "im.dlg.server.file.local.LocalFileStorageAdapter"
+services.file-storage.location = "/storage/files"
+
+{% if aws_use %}
+modules.files.adapter = "im.dlg.server.file.s3.S3StorageAdapter"
+services.aws.s3.access-key = "{{ aws_access }}"
+services.aws.s3.secret-key = "{{ aws_secret }}"
+services.aws.s3.default-bucket = "{{ aws_bucket }}"
+services.aws.s3.endpoint = "{{ aws_endpoint }}"
+services.aws.s3.path-style-access = true
+{% endif %}
+
+
+# Users
+modules.users.allow-username-change = true
+
+{% if ad_use %}
+# AD
+modules.active-directory.extension = "im.dlg.contrib.enterprise.activedirectory.ActiveDirectoryExtension"
+modules.validation.username-password.provider = "im.dlg.contrib.enterprise.activedirectory.ADValidationProvider"
+modules.active-directory.hostname = "{{ ad_host }}"
+modules.active-directory.port = {{ ad_port }}
+modules.active-directory.domain = "{{ ad_domain }}"
+modules.active-directory.power-user-login = "{{ ad_user }}"
+modules.active-directory.power-user-password = "{{ ad_password }}"
+modules.active-directory.sync-requests-interval = {{ ad_sync }}
+modules.active-directory.resync-interval = {{ ad_sync }}
+{% else %}
+modules.validation.username-password.provider = "im.dlg.server.auth.validation.InternalPasswordValidationProvider"
+modules.internal-ee.extension = "im.dlg.contrib.enterprise.InternalExtension"
+{% endif %}
+
+
+{% if smtp_use %}
+# SMTP
+services.email.sender.address = "{{ smtp_from }}"
+services.email.sender.name = "Dialog"
+services.email.sender.prefix = ""
+services.email.smtp.host = "{{ smtp_host }}"
+services.email.smtp.port = {{ smtp_port }}
+services.email.smtp.username = "{{ smtp_user }}"
+services.email.smtp.password = "{{ smtp_password }}"
+services.email.smtp.tls = {{ smtp_tls }}
+{% endif %}
+
+
+# Databases
+modules.messaging.history.storage = "{{ history_storage }}"
+modules.sequence.storage = "{{ sequence_storage }}"
+modules.storage.persistence.journal = "{{ persistence_journal }}"
+modules.storage.persistence.snapshot = "{{ persistence_snapshot }}"
+
+
+## PG
+services.postgresql.host = "{{ pg_host }}"
+services.postgresql.port = {{ pg_port }}
+services.postgresql.db = "{{ pg_db }}"
+services.postgresql.user = "{{ pg_user }}"
+services.postgresql.password = "{{ pg_password }}"
+services.postgresql.numThreads = {{ pg_numThreads }}
+
+
+## Cassandra
+{% if cass_username != "" and cass_password != "" %}
+services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
+services.cassandra.credentials.username = "{{ cass_username }}"
+services.cassandra.credentials.password = "{{ cass_password }}"
+
+services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
+services.cassandra.journal.authentication.username = "{{ cass_username }}"
+services.cassandra.journal.authentication.password = "{{ cass_password }}"
+
+services.cassandra.snapshot.contact-points = {{ cass_contact_points }}
+services.cassandra.snapshot.authentication.username = "{{ cass_username }}"
+services.cassandra.snapshot.authentication.password = "{{ cass_password }}"
+
+{% else %}
+services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
+services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
+services.cassandra.snapshot.contact-points = {{ cass_contact_points | to_nice_json }}
+{% endif %}
+
+
+# Voice
+modules.webrtc.ice-servers.0.url = "turn:80.93.190.242:3478?transport=tcp"
+modules.webrtc.ice-servers.0.username = "dialog"
+modules.webrtc.ice-servers.0.credential = "dialog"
+modules.webrtc.ice-servers.1.url = "turn:80.93.190.242:3478?transport=udp"
+modules.webrtc.ice-servers.1.username = "dialog"
+modules.webrtc.ice-servers.1.credential = "dialog"
+
+
+# Push server
+modules.push.provider = "im.dlg.server.push.StreamingPushProvider"
+modules.push.host = push.dlg.im
+modules.push.use-tls = false
+modules.push.port = 8010

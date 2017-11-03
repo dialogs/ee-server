@@ -1,0 +1,24 @@
+---
+- name: nginx restart
+  debug: msg="checking config first"
+  changed_when: True
+  notify:
+    - validate nginx configuration
+    - restart after check
+
+- name: nginx reload
+  debug: msg="checking config first"
+  changed_when: True
+  notify:
+    - validate nginx configuration
+    - reload after check
+
+- name: validate nginx configuration
+  command: nginx -t -c /etc/nginx/nginx.conf
+  changed_when: False
+
+- name: restart after check
+  service: name=nginx state=restarted
+
+- name: reload after check
+  service: name=nginx state=reloaded

@@ -1,0 +1,38 @@
+---
+
+- name: OpenSSL is installed via Aptitude
+  apt:
+    name: openssl
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Find path to the openssl binary
+  command: which openssl
+  changed_when: false
+  register: which_openssl_output
+
+- name: Register fact containing path to openssl binary
+  set_fact:
+    dhparam_openssl_binary: "{{which_openssl_output.stdout_lines[0]}}"
+  no_log: true
+
+- name: Output directory for Diffie-Hellman parameters exists
+  file:
+    path: "{{ dhparam_file | dirname }}"
+    state: directory
+
+- name: The Diffie-Hellman parameter file is generated
+  shell: "{{dhparam_openssl_binary}} dhparam -out '{{ dhparam_file }}' {{ dhparam_size }}"
+  args:
+    creates: "{{ dhparam_file }}"
+
+- set_fact:
+    _cronjob_name: "dhparam_{{ dhparam_file | hash('sha1') }}"
+
+- name: Cron Job is configured to update the DH params weekly
+  cron:
+    name: "{{ _cronjob_name }}"
+    job: "{{dhparam_openssl_binary}} dhparam -out '{{ dhparam_file }}' {{ dhparam_size }}"
+    state: "{{ 'present' if dhparam_update_enabled else 'absent' }}"
+    special_time: "{{ dhparam_update_interval }}"

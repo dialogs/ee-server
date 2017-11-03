@@ -1,0 +1,13 @@
+- name: Create certs dir
+  file:
+    path: "/etc/haproxy/certs/"
+    state: directory
+
+- stat:
+    path: '/etc/haproxy/certs/ha.pem'
+  register: cert_file
+
+- name: Append letsencrypt certs
+  shell: 'cat /etc/letsencrypt/live/{{ base_url }}/privkey.pem /etc/letsencrypt/live/{{ base_url }}/fullchain.pem > /etc/haproxy/certs/ha.pem'
+  when: not cert_file.stat.exists
+  notify: restart haproxy

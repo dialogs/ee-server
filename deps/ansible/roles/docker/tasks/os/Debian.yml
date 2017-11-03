@@ -1,0 +1,24 @@
+---
+- name: ensure docker dependencies are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: ensure Docker GPG key is present
+  apt_key:
+    id: "{{ docker_gpg_key }}"
+    keyserver: "{{ key_server }}"
+
+- name: ensure repo is present
+  copy:
+    src: "repos/{{ ansible_distribution }}"
+    dest: /etc/apt/sources.list.d/docker.list
+
+- name: ensure docker is installed
+  apt:
+    name: docker-engine
+    state: present
+    update_cache: yes

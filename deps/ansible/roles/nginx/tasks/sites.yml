@@ -1,0 +1,37 @@
+- set_fact:
+    http_scheme: "https"
+    tcp_scheme: "tls"
+    ws_scheme: "wss"
+  when: use_tls
+
+- name: Create nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Create log dir
+  file:
+    path: "{{ nginx_log_dir }}/{{ item }}"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    state: directory
+  with_items:
+    - dialog
+
+- name: Create site configs
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: "{{ nginx_conf_dir }}/sites-available/{{ item }}.conf"
+  with_items:
+    - dialog
+
+  notify: nginx reload
+
+- name: Enable site configs
+  file:
+    src: "{{ nginx_conf_dir }}/sites-available/{{ item }}.conf"
+    dest: "{{ nginx_conf_dir }}/sites-enabled/{{ item }}.conf"
+    state: link
+  with_items:
+    - dialog
+  notify: nginx reload
