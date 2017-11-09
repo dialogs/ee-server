@@ -28,7 +28,7 @@
 - name: Install HAProxy (apt stretch)
   apt:
     name: "haproxy"
-    default_release: "{{ansible_distribution_release}}-backports"
+    default_release: "{{ansible_distribution_release}}"
   when: ansible_distribution_release == 'stretch'
 
 - include_tasks: letsencrypt_certs.yml
