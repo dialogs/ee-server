@@ -1,103 +1,57 @@
-[![Build Status](https://travis-ci.org/jaywink/ansible-letsencrypt.svg?branch=master)](https://travis-ci.org/jaywink/ansible-letsencrypt)
-[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-letsencrypt-blue.svg?style=flat-square)](https://galaxy.ansible.com/jaywink/letsencrypt)
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://tldrlegal.com/license/mit-license)
+# ansible-letsencrypt
+An ansible role to generate TLS certificates and get them signed by Let's Encrypt.
 
-## Ansible LetsEncrypt
+Currently attempts first to use the `webroot` authenticator, then if that fails to create certificates,
+it will use the standalone authenticator. This is handy for generating certs on a fresh machine before
+the web server has been configured or even installed.
 
-A role to automate LetsEncrypt certificates.
+# Supported platforms
+- Debian Jessie
+- Debian Stretch
 
-Stability: beta.
+On other platforms this role will try to install letsencrypt using pip, which is not officially supported and may break over upgrades at least.
 
-Ansible version required: 2.x
+If you test it on other platforms please let me know the results (positive or
+otherwise) so I can document them here and/or fix the issue.
 
-### What does it do?
+Requires Ansible >= 2.0
 
-This role will pull in the official [Certbot client](https://github.com/certbot/certbot), install it and issue or renew a certificate with your chosen domain.
+# Usage
+First, read Let's Encrypt's TOS and EULA. Only proceed if you agree to them.
 
-Functionality as follows:
-* Tested on Ubuntu 14.04 and Debian 8
-* One domain per role include only
-* Runs in `certonly` mode only
+The following variables are available:
 
+`letsencrypt_webroot_path` is the root path that gets served by your web server. Defaults to `/var/www`.
 
-PR's are welcome to include more functionality.
+`letsencrypt_email` needs to be set to your email address. Let's Encrypt wants it. Defaults to `webmaster@{{ ansible_fqdn }}`. If you _really_ want to register without providing an email address, define the variabe `letsencrypt_no_email`.
 
-### Installation
+`letsencrypt_rsa_key_size` allows to specify a size for the generated key.
 
-You can install the role directly from Galaxy as follows:
+`letsencrypt_cert_domains` is a list of domains you wish to get a certificate for. It defaults to a single item with the value of `{{ ansible_fqdn }}`.
 
-    ansible-galaxy install jaywink.letsencrypt
+`letsencrypt_install_directory` should probably be left alone, but if you set it, it will change where the letsencrypt program is installed.
 
-### Details
+`letsencrypt_renewal_command_args` add arguments to the `letsencrypt renewal` command that gets run using cron.  For example, use the renewal hooks to restart a web server.
 
-* The client will be installed in `/opt/certbot` as root
-* Each run will pull in the Certbot client code from a proven release version. You can set a specific Certbot version using the variable `letsencrypt_certbot_version`.
-* A list of services to be stopped before and (re-)started after obtaining a new certificate can be configured using the variable `letsencrypt_pause_services`.
-* `certonly` mode is used, which means no automatic web server installation
-* After cert issuing, you can find it in `/etc/letsencrypt/live/<domainname>`
-   * Tip, use this in your Apache2 config, for example, in your main role. Just make sure not to try and start Apache2 with the virtualhost active without the LetsEncrypt role running first!
+`letsencrypt_standalone_command_args` adds arguments to the standalone authentication method. This is mostly useful for specifying supported challenges, such as `--standalone-supported-challenges tls-sni-01` to limit the authentication to port 443 if something is already running on 80 or vice versa.
 
-       ```
-       SSLCertificateFile /etc/letsencrypt/live/{{ letsencrypt_domain }}/cert.pem
-       SSLCertificateKeyFile /etc/letsencrypt/live/{{ letsencrypt_domain }}/privkey.pem
-       SSLCertificateChainFile /etc/letsencrypt/live/{{ letsencrypt_domain }}/chain.pem
-       ```
+`letsencrypt_server` sets the alternative auth server if needed. For example, during tests it's set to `https://acme-staging.api.letsencrypt.org/directory` to use the staging server (far higher rate limits, but certs are not trusted). It is not set by default.
 
-* Note! If this role fails in the cert request part, you might have stopped services - take care!
-* If the cert has been requested before, this role will automatically try to renew it, if possible. Disable this functionality by setting `letsencrypt_force_renew` to `false`. No renewal will be attempted in this case if cert is not due for renewal.
-* A `www.` subdomain will automatically be requested along with the certificate.
-    * To disable this behaviour, set `letsencrypt_request_www` to `false` in your vars.
+`ssl_certificate` and `ssl_certificate_key` symlinks the certificates to provided path if both are set.
 
-### Requirements
+The [Let's Encrypt client](https://github.com/letsencrypt/letsencrypt) will put the certificate and accessories in `/etc/letsencrypt/live/<first listed domain>/`. For more info, see the [Let's Encrypt documentation](https://letsencrypt.readthedocs.org/en/latest/using.html#where-are-my-certificates).
 
-Tested with the following:
-
-* Ubuntu 14.04 and Debian 8
-* Apache2 and Nginx
-* Ansible 2.x
-
-### Role Variables
-
-#### Required
-
-* `letsencrypt_domain` - Domain the certificate is for.
-* `letsencrypt_email` - Your email as certificate owner.
-
-#### Optional
-
-* `letsencrypt_certbot_args` - Additional command line args to be passed to Certbot-- will be combined with `letsencrypt_certbot_default_args`. See [the Certbot docs](https://certbot.eff.org/docs/using.html) for arguments you may pass.
-* `letsencrypt_certbot_default_args` - Please see `defaults/main.yml` what the default arguments are. Also, you could add To override all the arguments to Certbot, for example to use another plugin, set them using this variable.
-* `letsencrypt_certbot_verbose` - Make Certbot output to console (default `true`).
-* `letsencrypt_certbot_version` - Set specific Certbot version, for example a git tag or branch. Note that the lowest version of Certbot we support is 0.6.0.
-* `letsencrypt_force_renew` - Whether to attempt renewal always, default to `true`.
-* `letsencrypt_pause_services` - List of services to stop/start while calling Certbot.
-* `letsencrypt_request_www` - Request `www.` automatically (default `true`).
-
-### Example Playbook
-
-This role works best when included just before your main site role, for example. Or it can be used in an individual playbook, for example as below.
-
-This role should become root on the target host.
-
-    ---
-    - hosts: myhost
-      become: yes
-      become_user: root
-      roles:
-        - role: ansible-letsencrypt
-          letsencrypt_email: email@example.com
-          letsencrypt_domain: example.com
-          letsencrypt_pause_services:
-            - apache2
-
-### License
-
-MIT
-
-### Author Information
-
-Jason Robinson (@jaywink) - mail@jasonrobinson.me - https://jasonrobinson.me - https://twitter.com/jaywink
-
-Special thanks to Stefan Grönke (@gronke) for his work on expanding this role.
-
-See CONTRIBUTORS for a full list of contributors.
+# Example Playbook
+```
+---
+ - hosts: tls_servers
+   user: root
+   roles:
+     - role: letsencrypt
+       letsencrypt_webroot_path: /var/www/html
+       letsencrypt_email: user@example.net
+       letsencrypt_cert_domains:
+        - www.example.net
+        - example.net
+       letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
+```

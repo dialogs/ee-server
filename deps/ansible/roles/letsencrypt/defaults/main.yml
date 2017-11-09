@@ -1,30 +1,16 @@
 ---
-# This is the certificate admins email - make sure to set it to yours!
-letsencrypt_email: yourmail@example.com
-# The domain we're requesting/renewing for
-letsencrypt_domain: example.com
-# Always request www. also?
-letsencrypt_request_www: true
-# Version/Release tag or branch name of certbot to use
-letsencrypt_certbot_version: v0.8.1
-# Print Certbot output
-letsencrypt_certbot_verbose: true
-# Pause these services while updating the certificate
-letsencrypt_pause_services: []
-# Force Certificate Reneval
-letsencrypt_force_renew: true
-# certbot custom arguments -- see: https://certbot.eff.org/docs/using.html
-letsencrypt_certbot_args: []
-# default arguments passed to certbot
-letsencrypt_certbot_default_args:
-  - certonly
-  - --standalone
-  - --expand
-  - --text
-  - -n
-  - --no-self-upgrade
-  - -m '{{letsencrypt_email}}'
-  - --agree-tos
-
-# This is enabled when running tests - DO NOT TOUCH
-letsencrypt_test: false
+  letsencrypt_src_directory: /usr/local/share/letsencrypt
+  letsencrypt_venv: "{{ letsencrypt_src_directory }}/env"
+  letsencrypt_cert_domains:
+    - "{{ ansible_fqdn }}"
+  letsencrypt_webroot_path: /var/www
+  letsencrypt_authenticator: webroot
+  letsencrypt_email: "webmaster@{{ ansible_domain }}"
+  letsencrypt_path: "{{ letsencrypt_venv }}/bin/letsencrypt"
+  letsencrypt_command: "{{ letsencrypt_path }} -n --agree-tos  {% if letsencrypt_rsa_key_size is defined %}--rsa-key-size {{ letsencrypt_rsa_key_size }}{% endif %} --text {% for domain in letsencrypt_cert_domains %}-d {{ domain }} {% endfor %}{% if letsencrypt_no_email is defined %}--register-unsafely-without-email{% else %}--email {{ letsencrypt_email }}{% endif %} {% if letsencrypt_server is defined %}--server {{ letsencrypt_server }}{% endif %} --expand"
+  letsencrypt_renewal_frequency:
+    day: "*"
+    hour: 0
+    minute: 0
+  letsencrypt_renewal_command_args: ''
+  letsencrypt_standalone_command_args: ''

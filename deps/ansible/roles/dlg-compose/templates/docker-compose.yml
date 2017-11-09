@@ -13,11 +13,11 @@ services:
   coturn:
     image: dialog-docker-public-registry.bintray.io/coturn:latest
     network_mode: host
-    ports:
-      - 3478:3478/udp
-      - 3478:3478
-      - 10000-10100:10000-10100
-      - 10000-10100:10000-10100/udp
+    environment:
+      - TURN_USERNAME=dialog
+      - TURN_PASSWORD=dialog
+      - TURN_PORT=3478
+      - REALM=dialog
 
   dialog-server:
     image: dialog-docker-ee-registry.bintray.io/server:1.13.4

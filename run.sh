@@ -48,13 +48,13 @@ if [ $(program_is_installed ansible) == 0 ]; then
 fi
 
 if [ $(program_is_installed docker) == 0 ]; then
-  echo -e "\nInstall dokcer"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "docker"
+  echo -e "\nInstall docker"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker"
 fi
 
 if [ $(program_is_installed docker-compose) == 0 ]; then
   echo -e "\nInstall docker-compose"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "docker-compose"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker-compose"
 fi
 
 if [ $(program_is_installed nginx) == 0 ]; then
