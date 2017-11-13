@@ -156,6 +156,15 @@ Use it password for login to dashboard `http://<base_url>/dash`
 admin / f9c45482cf4570d16852ff900e3673dc
 
 ### Dashboard overview
+TL;DR
+
+* Create new users in dashboard
+* Set passwords to users through GraphQL
+```
+mutation {
+	users_set_password( user_id: <ID>, password: "password")
+}
+```
 TODO
 
 ## Connect to Dialog Server
