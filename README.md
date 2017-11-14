@@ -214,11 +214,8 @@ or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
 
 * ```http            80   on 0.0.0.0/0, ::/0``` — web without ssl
 * ```https           443  on 0.0.0.0/0, ::/0``` — web with ssl
-* ```Custom TCP Rule 9070 on 0.0.0.0/0, ::/0``` — binary tcp
-* ```Custom TCP Rule 9080 on 0.0.0.0/0, ::/0``` — web socket
-* ```Custom TCP Rule 9090 on 0.0.0.0/0, ::/0``` — HTTP API
-* ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile
-* ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop
+* ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile endpoint
+* ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop endpoint
 
 3. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
 4. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
