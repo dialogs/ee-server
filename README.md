@@ -3,7 +3,7 @@
 [Dialog](https://dlg.im) is a handy and feature-rich enterprise multi-device messenger available for server or cloud – Slack-like, but not Slack-limited
 
 ## What is this?
-This auto of demo all-in-one installation for testing Dialog EE Server on your server.
+This auto of demo all-in-one installation for testing Dialog EE Server on your server. You may use Amazon AMI to run this demo without install.
 
 ### Prerequisites
 * 4 cores CPU / 8 GB RAM
@@ -11,7 +11,7 @@ This auto of demo all-in-one installation for testing Dialog EE Server on your s
 * Git
 * Bash
 
-### Preparations
+### Preparations (manual install)
 
 #### Define variables for your installation
 Copy `vars.example.yml`
@@ -124,7 +124,7 @@ In response you will receive json file. Save it in your home directory as ~/.doc
 
 ```
 
-### Installing
+### Installing (manual install)
 After configuration you can run the script
 ```bash
 $> ./run.sh
@@ -138,6 +138,7 @@ This script will install the next software:
 
 and configure it after.
 
+
 When the server starts will be create the first admin. His password will STDOUT print
 ```bash
 ...
@@ -145,15 +146,44 @@ When the server starts will be create the first admin. His password will STDOUT 
 [INFO] [main] [akka.remote.Remoting] Remoting now listens on addresses: [akka.tcp://actor-cli@172.18.0.5:36013]
 [INFO] [actor-cli-akka.actor.default-dispatcher-2] [akka.tcp://actor-cli@172.18.0.5:36013/user/$a] Connected to [akka.tcp://dialog-server@172.18.0.5:2552/system/receptionist]
 
--> Admin granted. Password: `f9c45482cf4570d16852ff900e3673dc` <-
+-> Admin granted. Password: `<password>` <-
 
 [INFO] [actor-cli-akka.remote.default-remote-dispatcher-8] [akka.tcp://actor-cli@172.18.0.5:36013/system/remoting-terminator] Shutting down remote daemon.
 [INFO] [actor-cli-akka.remote.default-remote-dispatcher-8] [akka.tcp://actor-cli@172.18.0.5:36013/system/remoting-terminator] Remote daemon shut down; proceeding with flushing remote transports.
 ...
 ```
-Use it password for login to dashboard `http://<base_url>/dash`
+Use this password for login to dashboard `http://<base_url>/dash`
 
-admin / f9c45482cf4570d16852ff900e3673dc
+```admin / <password>```
+
+### Deploy Amazon AMI (instead of manual installation)
+Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog-EE-server-AMI
+or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
+
+1. Make "Launch" of this image, recomended minimum instance "t2.large".
+2. Create a new security group on step 6 of deploy image (or do it later):
+
+* ```http            80   on 0.0.0.0/0, ::/0``` — web without ssl
+* ```https           443  on 0.0.0.0/0, ::/0``` — web with ssl
+* ```Custom TCP Rule 9070 on 0.0.0.0/0, ::/0``` — binary tcp
+* ```Custom TCP Rule 9080 on 0.0.0.0/0, ::/0``` — web socket
+* ```Custom TCP Rule 9090 on 0.0.0.0/0, ::/0``` — HTTP API
+* ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile
+* ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop
+
+3. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
+4. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
+5. All running on "IPv4 Public IP", you can proceed to the next steps.
+* home directory of install: ```/home/dialog/ee-server/``` (you must **create admin password** by run ```create-admin.sh``` in this directory):
+
+* ``` cd /home/dialog/ee-server/```
+* ```./create-admin.sh admin | grep Password:```
+* ```-> User admin was created. Do generate admin password? (y/n): y ```
+* ```-> Admin granted. Password: `<password>` ```
+
+Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
+
+```admin / <password>```
 
 ### Dashboard overview
 TL;DR
