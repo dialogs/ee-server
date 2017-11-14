@@ -233,3 +233,7 @@ or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
 Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
 
 ```admin / <password>```
+
+## Known issues
+* Not working auto setup invite service
+* Not working auto setup voice server in box
