@@ -156,35 +156,6 @@ Use this password for login to dashboard `http://<base_url>/dash`
 
 ```admin / <password>```
 
-### Deploy Amazon AMI (instead of manual installation)
-Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog-EE-server-AMI
-or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
-
-1. Make "Launch" of this image, recomended minimum instance "t2.large".
-2. Create a new security group on step 6 of deploy image (or do it later):
-
-* ```http            80   on 0.0.0.0/0, ::/0``` — web without ssl
-* ```https           443  on 0.0.0.0/0, ::/0``` — web with ssl
-* ```Custom TCP Rule 9070 on 0.0.0.0/0, ::/0``` — binary tcp
-* ```Custom TCP Rule 9080 on 0.0.0.0/0, ::/0``` — web socket
-* ```Custom TCP Rule 9090 on 0.0.0.0/0, ::/0``` — HTTP API
-* ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile
-* ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop
-
-3. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
-4. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
-5. All running on "IPv4 Public IP", you can proceed to the next steps.
-* home directory of install: ```/home/dialog/ee-server/``` (you must **create admin password** by run ```create-admin.sh``` in this directory):
-
-* ``` cd /home/dialog/ee-server/```
-* ```./create-admin.sh admin | grep Password:```
-* ```-> User admin was created. Do generate admin password? (y/n): y ```
-* ```-> Admin granted. Password: `<password>` ```
-
-Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
-
-```admin / <password>```
-
 ### Dashboard overview
 TL;DR
 
@@ -198,6 +169,8 @@ mutation {
 TODO
 
 ## Connect to Dialog Server
+Web app available on `http://<base-url>`
+
 Server address formula for clients:
 ```
 <scheme>://<base_url>:<port>
@@ -231,3 +204,32 @@ tcp_port: 7443
 `wss://example.com:8443` -  Web app / Desktop
 
 `tls://example.com:7443` - Mobile
+
+## Deploy Amazon AMI (instead of manual installation)
+Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog-EE-server-AMI
+or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
+
+1. Make "Launch" of this image, recomended minimum instance "t2.large".
+2. Create a new security group on step 6 of deploy image (or do it later):
+
+* ```http            80   on 0.0.0.0/0, ::/0``` — web without ssl
+* ```https           443  on 0.0.0.0/0, ::/0``` — web with ssl
+* ```Custom TCP Rule 9070 on 0.0.0.0/0, ::/0``` — binary tcp
+* ```Custom TCP Rule 9080 on 0.0.0.0/0, ::/0``` — web socket
+* ```Custom TCP Rule 9090 on 0.0.0.0/0, ::/0``` — HTTP API
+* ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile
+* ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop
+
+3. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
+4. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
+5. All running on "IPv4 Public IP", you can proceed to the next steps.
+* home directory of install: ```/home/dialog/ee-server/``` (you must **create admin password** by run ```create-admin.sh``` in this directory):
+
+* ``` cd /home/dialog/ee-server/```
+* ```./create-admin.sh admin | grep Password:```
+* ```-> User admin was created. Do generate admin password? (y/n): y ```
+* ```-> Admin granted. Password: `<password>` ```
+
+Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
+
+```admin / <password>```
