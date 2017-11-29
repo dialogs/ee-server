@@ -11,7 +11,7 @@ services:
       - ./data/cassandra:/var/lib/cassandra
 
   coturn:
-    image: dialog-docker-public-registry.bintray.io/coturn:latest
+    image: {{ turn_image }}
     network_mode: host
     environment:
       - TURN_USERNAME=dialog
@@ -20,7 +20,7 @@ services:
       - REALM=dialog
 
   dialog-server:
-    image: dialog-docker-ee-registry.bintray.io/server:1.13.4
+    image: {{ dlg_image }}
     volumes:
       - ./conf:/opt/docker/conf:ro
       - ./data/server/files:/storage/files
@@ -33,12 +33,12 @@ services:
       - cassandra
 
   web-app:
-    image: dialog-docker-ee-registry.bintray.io/web-app:latest
+    image: {{ web_app_image }}
     ports:
       - 127.0.0.1:{{ web_app_port }}:80
 
   dashboard:
-    image: dialog-docker-ee-registry.bintray.io/dashboard:latest
+    image: {{ dashboard_image }}
     environment:
       - ENDPOINT=http://dialog-server:9090
     ports:
