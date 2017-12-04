@@ -2,6 +2,7 @@
 # Main
 project_name: "My EE"
 base_url: "example.com"
+server_license: ""
 
 # SMTP
 smtp_host: ""

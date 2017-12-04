@@ -5,6 +5,7 @@ http.base-uri = "{{ http_scheme }}://{{ base_url }}"
 
 # Secure
 secret = "mysupersecuresecret"
+license = "{{ server_license }}"
 modules.security.server-keys.0.public = "/opt/docker/keys/dialog.pub"
 modules.security.server-keys.0.private = "/opt/docker/keys/dialog.private"
 
