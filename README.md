@@ -12,6 +12,12 @@ This auto of demo all-in-one installation for testing Dialog EE Server on your s
 * Bash
 
 ### Preparations (manual install)
+1. Getting license
+2. Key for access to docker registry (self-hosted install)
+
+Write your request to e-mail - services@dlg.im.
+
+In response you will receive base64 string and json file.
 
 #### Define variables for your installation
 Copy `vars.example.yml`
@@ -24,6 +30,8 @@ Edit `vars.yml` as you like
 If you do not plan to use any variable, leave the predefined value.
 
 ##### Main vars
+`server_license` - License key for Dialog Server.
+
 `project_name: "My EE"` - External name which will be displayed in the email messages, contact books, etc.
 
 `base_url: "example.com"` - IP or uri. Important variable. This address will be used to generate all endpoints.
