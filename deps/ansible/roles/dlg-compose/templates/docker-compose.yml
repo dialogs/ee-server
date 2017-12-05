@@ -31,6 +31,9 @@ services:
     links:
       - postgresql
       - cassandra
+    depends_on:
+      - postgresql
+      - cassandra
 
   web-app:
     image: {{ web_app_image }}
