@@ -6,7 +6,7 @@
 This auto of demo all-in-one installation for testing Dialog EE Server on your server. You may use Amazon AMI to run this demo without install.
 
 * [Manual install](#manual-install)
-* [Deploy Amazon AMI](#deploy-amazon-ami)
+* [Deploy Amazon AMI](#deploy-amazon-ami-instead-of-manual-installation)
 
 ### Prerequisites
 * Getting license
