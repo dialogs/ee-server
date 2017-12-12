@@ -41,9 +41,9 @@ tcp_port: 7443
 
 ### SSL  ###
 # STRONG RECOMENTED use it
-use_tls: true
+use_tls: false
 
-use_letsencrypt: true
+use_letsencrypt: false
 letsencrypt_email: email@example.com
 
 
