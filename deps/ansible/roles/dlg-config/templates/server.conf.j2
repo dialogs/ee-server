@@ -36,7 +36,7 @@ modules.files.adapter = "im.dlg.server.file.s3.S3StorageAdapter"
 services.aws.s3.access-key = "{{ aws_access }}"
 services.aws.s3.secret-key = "{{ aws_secret }}"
 services.aws.s3.default-bucket = "{{ aws_bucket }}"
-services.aws.s3.endpoint = "{{ aws_endpoint }}"
+#services.aws.s3.endpoint = "{{ aws_endpoint }}" #do not need default endpoint for AWS (need in docker-compose.yml) 
 services.aws.s3.path-style-access = "{{ aws_path }}"
 {% endif %}
 
