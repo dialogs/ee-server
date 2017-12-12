@@ -5,19 +5,30 @@
 ## What is this?
 This auto of demo all-in-one installation for testing Dialog EE Server on your server. You may use Amazon AMI to run this demo without install.
 
+* [Manual install](#manual-install)
+* [Deploy Amazon AMI](#deploy-amazon-ami)
+
 ### Prerequisites
+* Getting license
+
+Write your request to e-mail - services@dlg.im.
+In response you will receive license base64 string.
+
+### Manual install
+
+#### Requirements
 * 4 cores CPU / 8 GB RAM
 * Debian 8/9
 * Git
 * Bash
 
-### Preparations (manual install)
-1. Getting license
-2. Key for access to docker registry (self-hosted install)
+#### Preparations
+
+* Key for access to docker registry (self-hosted install)
 
 Write your request to e-mail - services@dlg.im.
 
-In response you will receive base64 string and json file.
+In response you will receive json file.
 
 #### Define variables for your installation
 Copy `vars.example.yml`
@@ -111,7 +122,7 @@ STRONG RECOMENTED use it
 
 `letsencrypt_email: email@example.com` - Email address for important account notifications
 
-### Getting access to repository
+#### Getting access to repository
 Write a request to gain access to mail - services@dlg.im.
 
 In response you will receive json file. Save it in your home directory as ~/.docker/config.json or append to existing one.
@@ -132,7 +143,7 @@ In response you will receive json file. Save it in your home directory as ~/.doc
 
 ```
 
-### Installing (manual install)
+#### Installing
 After configuration you can run the script
 ```bash
 $> ./run.sh
@@ -213,7 +224,7 @@ tcp_port: 7443
 
 `tls://example.com:7443` - Mobile
 
-## Deploy Amazon AMI (instead of manual installation)
+### Deploy Amazon AMI (instead of manual installation)
 Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog-EE-server-AMI
 or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
 
