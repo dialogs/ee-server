@@ -30,8 +30,8 @@
 
 - name: Configure AWS instance
   set_fact:
-    awsintance_use: true
-  when: aws_endpoint = "" and aws_bucket != "" and aws_access = "" and aws_secret = ""
+    awsinstance_use: true
+  when: aws_endpoint == "" and aws_bucket != "" and aws_access == "" and aws_secret == ""
 
 - name: Create server.conf
   template:
