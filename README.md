@@ -5,19 +5,30 @@
 ## What is this?
 This auto of demo all-in-one installation for testing Dialog EE Server on your server. You may use Amazon AMI to run this demo without install.
 
+* [Manual install](#manual-install)
+* [Deploy Amazon AMI](#deploy-amazon-ami-instead-of-manual-installation)
+
 ### Prerequisites
+* Getting license
+
+Write your request to e-mail - services@dlg.im.
+In response you will receive license base64 string.
+
+### Manual install
+
+#### Requirements
 * 4 cores CPU / 8 GB RAM
 * Debian 8/9
 * Git
 * Bash
 
-### Preparations (manual install)
-1. Getting license
-2. Key for access to docker registry (self-hosted install)
+#### Preparations
+
+* Key for access to docker registry (self-hosted install)
 
 Write your request to e-mail - services@dlg.im.
 
-In response you will receive base64 string and json file.
+In response you will receive json file.
 
 #### Define variables for your installation
 Copy `vars.example.yml`
@@ -111,7 +122,7 @@ STRONG RECOMENTED use it
 
 `letsencrypt_email: email@example.com` - Email address for important account notifications
 
-### Getting access to repository
+#### Getting access to repository
 Write a request to gain access to mail - services@dlg.im.
 
 In response you will receive json file. Save it in your home directory as ~/.docker/config.json or append to existing one.
@@ -132,7 +143,7 @@ In response you will receive json file. Save it in your home directory as ~/.doc
 
 ```
 
-### Installing (manual install)
+#### Installing
 After configuration you can run the script
 ```bash
 $> ./run.sh
@@ -214,30 +225,57 @@ tcp_port: 7443
 `tls://example.com:7443` - Mobile
 
 ## Deploy Amazon AMI (instead of manual installation)
-Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog-EE-server-AMI
-or find public AMI with name "Dialog-EE-server-AMI" on your AWS console
+You need a S3 bucket ```<bucket name>``` with public read access and CORS rules:
+	
+```<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <MaxAgeSeconds>3000</MaxAgeSeconds>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration> 
+```
+
+Go to https://console.aws.amazon.com/ec2/v2/home?#Images:visibility=public-images;name=Dialog%20EE%20Server
+or find public AMI with name "Dialog EE Server" on your AWS console
 
 1. Make "Launch" of this image, recomended minimum instance "t2.large".
-2. Create a new security group on step 6 of deploy image (or do it later):
+2. Configure Instance Details — Advanced Details — User data (as text):
 
+```project_name: "Dialog EE Server"
+server_license: "<license key>"
+aws_endpoint: "s3.amazonaws.com"
+aws_bucket: "<bucket name>"
+aws_access: "<access key>"
+aws_secret: "<secret key>"
+aws_region: <s3 region>
+```
+
+3. Create a new security group on step 6 of deploy image (or do it later):
+
+* ```ssh             22   on 0.0.0.0/0, ::/0``` — ssh
 * ```http            80   on 0.0.0.0/0, ::/0``` — web without ssl
 * ```https           443  on 0.0.0.0/0, ::/0``` — web with ssl
 * ```Custom TCP Rule 7443 on 0.0.0.0/0, ::/0``` — Mobile endpoint
 * ```Custom TCP Rule 8443 on 0.0.0.0/0, ::/0``` — Web app / Desktop endpoint
 
-3. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
-4. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
-5. All running on "IPv4 Public IP", you can proceed to the next steps.
-* home directory of install: ```/home/dialog/ee-server/``` (you must **create admin password** by run ```create-admin.sh``` in this directory):
+4. Select an existing key pair or create a new key pair for SSH user 'admin' with root access and click "Launch instances"
+5. Wait some minutes for instance status checks change from "Initializing" to "2/2 checks passed"
+6. The newest version of Dialog EE running on "IPv4 Public IP", you can proceed to the next steps.
+* home directory of install: `/home/dialog/ee-server/` (you must **create admin password** by run `create-admin.sh` in this directory):
 
-* ``` cd /home/dialog/ee-server/```
-* ```./create-admin.sh admin | grep Password:```
-* ```-> User admin was created. Do generate admin password? (y/n): y ```
+* ` cd /home/dialog/ee-server/`
+* `./create-admin.sh admin | grep Password:`
+* `-> User admin was created. Do generate admin password? (y/n): y `
 * ```-> Admin granted. Password: `<password>` ```
 
 Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
 
-```admin / <password>```
+`admin / <password>`
 
 ## Known issues
 * Not working auto setup invite service
