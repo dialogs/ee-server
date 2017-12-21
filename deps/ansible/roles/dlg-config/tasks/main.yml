@@ -26,7 +26,12 @@
 - name: Configure AWS
   set_fact:
     aws_use: true
-  when: aws_bucket != ""
+  when: aws_endpoint != "" and aws_bucket != "" and aws_access != "" and aws_secret != ""
+
+- name: Configure AWS instance
+  set_fact:
+    awsintance_use: true
+  when: aws_endpoint = "" and aws_bucket != "" and aws_access = "" and aws_secret = ""
 
 - name: Create server.conf
   template:
