@@ -26,7 +26,7 @@ aws_bucket: ""
 aws_access: ""
 aws_secret: ""
 aws_path: "false"
-aws_region: us-east-2
+aws_region: ""
 
 ### port binds ###
 # localhost bindings

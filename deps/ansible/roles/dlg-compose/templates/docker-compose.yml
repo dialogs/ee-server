@@ -21,8 +21,6 @@ services:
 
   dialog-server:
     image: {{ dlg_image }}
-    environment:
-      - AWS_REGION={{ aws_region }}
     volumes:
       - ./conf:/opt/docker/conf:ro
       - ./data/server/files:/storage/files
