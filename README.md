@@ -246,13 +246,8 @@ or find public AMI with name "Dialog EE Server" on your AWS console
 1. Make "Launch" of this image, recomended minimum instance "t2.large".
 2. Configure Instance Details — Advanced Details — User data (as text):
 
-```project_name: "Dialog EE Server"
-server_license: "<license key>"
-aws_endpoint: "s3.amazonaws.com"
-aws_bucket: "<bucket name>"
-aws_access: "<access key>"
-aws_secret: "<secret key>"
-aws_region: <s3 region>
+```<license key>
+<bucket name>
 ```
 
 3. Create a new security group on step 6 of deploy image (or do it later):
@@ -269,9 +264,10 @@ aws_region: <s3 region>
 * home directory of install: `/home/dialog/ee-server/` (you must **create admin password** by run `create-admin.sh` in this directory):
 
 * ` cd /home/dialog/ee-server/`
-* `./create-admin.sh admin | grep Password:`
+* `./create-admin.sh admin`
 * `-> User admin was created. Do generate admin password? (y/n): y `
 * ```-> Admin granted. Password: `<password>` ```
+* The password was saved in **admin.txt**
 
 Use this password for login to dashboard `http://<IPv4 Public IP>/dash`
 
