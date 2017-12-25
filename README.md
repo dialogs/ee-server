@@ -246,7 +246,8 @@ or find public AMI with name "Dialog EE Server" on your AWS console
 1. Make "Launch" of this image, recomended minimum instance "t2.large".
 2. Configure Instance Details — Advanced Details — User data (as text):
 
-```<license key>
+```
+<license key>
 <bucket name>
 ```
 
