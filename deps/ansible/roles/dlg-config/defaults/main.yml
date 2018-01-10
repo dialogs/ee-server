@@ -42,6 +42,7 @@ ad_password: ""
 ad_sync: "10s"
 
 # S3
+awsinstance_use: false
 aws_use: false #true/false dynamic matched
 aws_endpoint: ""
 aws_bucket: ""
