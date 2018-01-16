@@ -20,16 +20,5 @@
    - nginx restart
   tags: nginx_reconf
 
-- set_fact:
-    letsencrypt_domain: "{{ base_url }}"
-    letsencrypt_request_www: false
-    letsencrypt_pause_services:
-      - nginx
-  when: use_letsencrypt
-
-- include_role:
-    name: letsencrypt
-  when: use_letsencrypt and use_tls
-
 - import_tasks: sites.yml
   tags: nginx_reconf
