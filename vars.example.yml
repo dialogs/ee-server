@@ -28,6 +28,10 @@ aws_secret: ""
 aws_path: "false"
 aws_region: ""
 
+dlg_custom_conf: |
+#  modules.admin.new-password-message.subject = "Your password at $$project$$"
+#  modules.admin.new-password-message.template = "Your new password is $$password$$, login: $$shortname$$"
+
 ### port binds ###
 # localhost bindings
 # localhost:[9090, 9080, 9070] reserverd for dlg-server

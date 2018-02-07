@@ -4,6 +4,7 @@
   roles:
     - role: packages
       tags: 'always'
+      when: not ansible_check_mode
 
     - role: docker
       tags: 'docker'
