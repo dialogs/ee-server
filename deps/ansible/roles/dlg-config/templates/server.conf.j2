@@ -52,6 +52,7 @@ modules.users.allow-username-change = true
 
 {% if ad_use %}
 # AD
+modules.enterprise.enable-sync = true
 modules.active-directory.extension = "im.dlg.contrib.enterprise.activedirectory.ActiveDirectoryExtension"
 modules.validation.username-password.provider = "im.dlg.contrib.enterprise.activedirectory.ADValidationProvider"
 modules.active-directory.hostname = "{{ ad_host }}"
