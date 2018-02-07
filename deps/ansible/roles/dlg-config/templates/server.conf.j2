@@ -118,10 +118,10 @@ services.cassandra.snapshot.contact-points = {{ cass_contact_points | to_nice_js
 
 
 # Voice
-modules.webrtc.ice-servers.0.url = "turn:turn.dlg.im:3478?transport=tcp"
+modules.webrtc.ice-servers.0.url = "turn:{{ base_url }}:3478?transport=tcp"
 modules.webrtc.ice-servers.0.username = "dialog"
 modules.webrtc.ice-servers.0.credential = "dialog"
-modules.webrtc.ice-servers.1.url = "turn:turn.dlg.im:3478?transport=udp"
+modules.webrtc.ice-servers.1.url = "turn:{{ base_url }}:3478?transport=udp"
 modules.webrtc.ice-servers.1.username = "dialog"
 modules.webrtc.ice-servers.1.credential = "dialog"
 
