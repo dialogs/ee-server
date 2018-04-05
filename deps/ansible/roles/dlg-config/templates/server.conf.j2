@@ -16,6 +16,8 @@ modules.crypto.storage = "cassandra"
 # Tools
 modules.metrics.consumers = ["im.dlg.metrics.PrometheusConsumer"]
 modules.admin.extension = "im.dlg.server.admin.AdminExtension"
+modules.admin.new-password-message.subject = "Your password at $$project$$"
+modules.admin.new-password-message.template = "Your new password is $$password$$, login: $$shortname$$"
 
 #modules.groups.invite-domain = "{{ http_scheme }}://{{ base_url }}"
 #modules.groups.invite-url-prefix = "/@/joinchat/"
