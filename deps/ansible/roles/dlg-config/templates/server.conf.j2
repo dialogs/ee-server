@@ -77,7 +77,7 @@ services.email.smtp.host = "{{ smtp_host }}"
 services.email.smtp.port = {{ smtp_port }}
 services.email.smtp.username = "{{ smtp_user }}"
 services.email.smtp.password = "{{ smtp_password }}"
-services.email.smtp.tls = {{ smtp_tls }}
+services.email.smtp.tls = {{ smtp_tls | lower }}
 {% endif %}
 
 
