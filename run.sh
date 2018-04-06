@@ -47,26 +47,26 @@ if [ $(program_is_installed ansible) == 0 ]; then
   /bin/bash deps/ansible-install.sh
 fi
 
-if [ $(program_is_installed docker) == 0 ]; then
-  echo -e "\nInstall docker"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker"
-fi
-
-if [ $(program_is_installed docker-compose) == 0 ]; then
-  echo -e "\nInstall docker-compose"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker-compose"
-fi
-
-if [ $(program_is_installed nginx) == 0 ]; then
-  echo -e "\nInstall NGINX"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "letsencrypt"
-fi
-
-if [ $(program_is_installed haproxy) == 0 ]; then
-  echo -e "\nInstall and configure haproxy"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "haproxy"
-fi
+# if [ $(program_is_installed docker) == 0 ]; then
+#   echo -e "\nInstall docker"
+#   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker"
+# fi
+#
+# if [ $(program_is_installed docker-compose) == 0 ]; then
+#   echo -e "\nInstall docker-compose"
+#   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker-compose"
+# fi
+#
+# if [ $(program_is_installed nginx) == 0 ]; then
+#   echo -e "\nInstall NGINX"
+#   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
+#   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "letsencrypt"
+# fi
+#
+# if [ $(program_is_installed haproxy) == 0 ]; then
+#   echo -e "\nInstall and configure haproxy"
+#   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "haproxy"
+# fi
 
 echo -e "\nConfigure frontends"
 ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "ha_reconf"

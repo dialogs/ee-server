@@ -2,29 +2,29 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: packages
-      tags: 'always'
-      when: not ansible_check_mode
-
-    - role: docker
-      tags: 'docker'
-
-    - role: docker-compose
-      tags: 'docker-compose'
-
+    # - role: packages
+    #   tags: 'always'
+    #   when: not ansible_check_mode
+    #
+    # - role: docker
+    #   tags: 'docker'
+    #
+    # - role: docker-compose
+    #   tags: 'docker-compose'
+    #
     - role: nginx
       dhparam_size: 1024
       dhparam_file: "/etc/ssl/dhparam.pem"
       tags: 'nginx'
-
-    - role: letsencrypt
-      letsencrypt_cert_domains:
-        - "{{ base_url }}"
-      letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
-      letsencrypt_email: "{{ letsencrypt_email }}"
-      when: use_letsencrypt and use_tls
-      tags: 'letsencrypt'
-
+    #
+    # - role: letsencrypt
+    #   letsencrypt_cert_domains:
+    #     - "{{ base_url }}"
+    #   letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
+    #   letsencrypt_email: "{{ letsencrypt_email }}"
+    #   when: use_letsencrypt and use_tls
+    #   tags: 'letsencrypt'
+    #
     - role: haproxy
       frontend_mode: 'tcp'
       backend_server: '127.0.0.1:9070'
