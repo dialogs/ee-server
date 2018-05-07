@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="20 seconds">
-  <logger name="akka.stream.impl" level="WARN"/>
-  <logger name="akka.cluster.ddata" level="INFO"/>
-  <logger name="akka.cluster.sharding.ShardRegion" level="INFO"/>
-  <logger name="slick.ast" level="WARN"/>
+   <logger name="im.dlg.server.dialog" level="DEBUG"/>
+  <logger name="com.datastax" level="ERROR"/>
   <logger name="slick.compiler" level="WARN"/>
-  <logger name="slick.jdbc.JdbcBackend.statement" level="WARN"/>
-  <logger name="slick.jdbc.JdbcBackend.benchmark" level="WARN"/>
-  <logger name="slick.jdbc.StatementInvoker.result" level="WARN"/>
-  <logger name="slick.backend.DatabaseComponent.action" level="WARN"/>
+  <logger name="slick.ast" level="WARN"/>
+  <logger name="akka.stream.impl" level="WARN"/>
+  <logger name="org.apache.zookeeper.ClientCnxn" level="WARN"/>
   <logger name="slick.relational.ResultConverterCompiler" level="WARN"/>
+  <logger name="slick.jdbc.StatementInvoker.result" level="WARN"/>
+  <logger name="slick.jdbc.JdbcBackend.statement" level="WARN"/>
+  <logger name="slick.backend.DatabaseComponent.action" level="WARN"/>
+  <logger name="slick.jdbc.JdbcBackend.benchmark" level="WARN"/>
+  <logger name="slick.util" level="ERROR"/>
   <logger name="im.dlg.server.session.ReSender" level="WARN"/>
   <logger name="im.dlg.server.session.SessionMessagePublisher" level="WARN"/>
   <logger name="im.dlg.server.peermanagers.GroupPeerManager" level="INFO"/>
-  <logger name="com.datastax" level="ERROR"/>
-  <logger name="org.apache.zookeeper.ClientCnxn" level="WARN"/>
+  <logger name="akka.cluster.sharding.ShardRegion" level="INFO"/>
   <logger name="scalikejdbc.StatementExecutor" level="INFO"/>
+  <logger name="akka.cluster.ddata" level="INFO"/>
+  <logger name="im.dlg.server.dialog.DialogList" level="FATAL"/>
+  <logger name="com.github.mauricio.async.db" level="WARN"/>
+  <logger name=".d.metrics.jaeger.JLoggingReporter" level="ERROR"/>
+
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <withJansi>true</withJansi>
     <encoder>

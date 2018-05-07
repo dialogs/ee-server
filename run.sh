@@ -75,10 +75,15 @@ ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-var
 echo -e "\nCreate docker-compose.yml"
 ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "dlg-compose"
 
-echo -e "\nCreate Dialog configurations"
-ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "dlg-config"
-
 server_runing=`nc -z localhost 9090 ; echo $?`
+
+echo -e "\nCreate Dialog configurations"
+if [[ $server_runing == 1 ]]; then
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --extra-vars "dlg_restart=false" --tags "dlg-config"
+else
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --extra-vars --tags "dlg-config"
+fi
+
 if [[ $server_runing == 1 ]]; then
   echo -e "\nRun services"
   docker-compose up -d

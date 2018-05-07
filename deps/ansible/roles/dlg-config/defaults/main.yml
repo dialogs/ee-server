@@ -1,4 +1,9 @@
 ---
+dlg_xmx: 3G
+dlg_xms: 512M
+application_custom:
+  -J-Des.set.netty.runtime.available.processors=false
+
 # Main
 project_name: "My Dialog"
 base_url: "localhost:9090"
@@ -48,3 +53,7 @@ aws_endpoint: ""
 aws_bucket: ""
 aws_access: ""
 aws_secret: ""
+
+
+##
+dlg_restart: true

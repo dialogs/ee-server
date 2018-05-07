@@ -1,0 +1,4 @@
+---
+- name: restart server
+  command: "docker-compose -f {{ conf_dir }}/../docker-compose.yml restart dialog-server"
+  when: dlg_restart

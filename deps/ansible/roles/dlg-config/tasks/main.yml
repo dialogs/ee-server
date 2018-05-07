@@ -33,10 +33,16 @@
     awsinstance_use: true
   when: aws_endpoint == "" and aws_bucket != "" and aws_access == "" and aws_secret == ""
 
+- name: Create application.ini
+  template:
+    src: templates/application.ini.j2
+    dest: "{{ conf_dir }}/application.ini"
+
 - name: Create server.conf
   template:
     src: templates/server.conf.j2
     dest: "{{ conf_dir }}/server.conf"
+  notify: restart server
 
 - name: Create logback.xml
   template:
