@@ -82,14 +82,6 @@ services.email.smtp.password = "{{ smtp_password }}"
 services.email.smtp.tls = {{ smtp_tls | lower }}
 {% endif %}
 
-
-# Databases
-modules.messaging.history.storage = "{{ history_storage }}"
-modules.sequence.storage = "{{ sequence_storage }}"
-modules.storage.persistence.journal = "{{ persistence_journal }}"
-modules.storage.persistence.snapshot = "{{ persistence_snapshot }}"
-
-
 ## PG
 services.postgresql.host = "{{ pg_host }}"
 services.postgresql.port = {{ pg_port }}
@@ -97,28 +89,6 @@ services.postgresql.db = "{{ pg_db }}"
 services.postgresql.user = "{{ pg_user }}"
 services.postgresql.password = "{{ pg_password }}"
 services.postgresql.numThreads = {{ pg_numThreads }}
-
-
-## Cassandra
-{% if cass_username != "" and cass_password != "" %}
-services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.credentials.username = "{{ cass_username }}"
-services.cassandra.credentials.password = "{{ cass_password }}"
-
-services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.journal.authentication.username = "{{ cass_username }}"
-services.cassandra.journal.authentication.password = "{{ cass_password }}"
-
-services.cassandra.snapshot.contact-points = {{ cass_contact_points }}
-services.cassandra.snapshot.authentication.username = "{{ cass_username }}"
-services.cassandra.snapshot.authentication.password = "{{ cass_password }}"
-
-{% else %}
-services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.snapshot.contact-points = {{ cass_contact_points | to_nice_json }}
-{% endif %}
-
 
 # Voice
 modules.webrtc.ice-servers.0.url = "turn:{{ base_url }}:3478?transport=tcp"

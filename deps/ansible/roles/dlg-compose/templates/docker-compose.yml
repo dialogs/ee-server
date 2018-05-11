@@ -5,11 +5,6 @@ services:
     volumes:
       - ./data/pg:/var/lib/postgresql
 
-  cassandra:
-    image: cassandra:3.10
-    volumes:
-      - ./data/cassandra:/var/lib/cassandra
-
   coturn:
     image: {{ turn_image }}
     network_mode: host
@@ -30,10 +25,8 @@ services:
       - 127.0.0.1:9070:9070
     links:
       - postgresql
-      - cassandra
     depends_on:
       - postgresql
-      - cassandra
 
   web-app:
     image: {{ web_app_image }}
