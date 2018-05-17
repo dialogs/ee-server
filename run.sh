@@ -81,7 +81,7 @@ echo -e "\nCreate Dialog configurations"
 if [[ $server_runing == 1 ]]; then
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --extra-vars "dlg_restart=false" --tags "dlg-config"
 else
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --extra-vars --tags "dlg-config"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "dlg-config"
 fi
 
 if [[ $server_runing == 1 ]]; then
