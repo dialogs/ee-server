@@ -30,6 +30,24 @@ Write your request to e-mail - services@dlg.im.
 
 In response you will receive json file.
 
+#### Getting access to repository
+Write a request to gain access to email address - services@dlg.im.
+
+In response you will receive json file. Save it in your home directory as ~/.docker/config.json (/root/.docker/config.json #for root user) or append to existing one.
+```json
+# ~/.docker/config.json example content
+
+{
+	"auths": {
+		"dialog-docker-ee-registry.bintray.io": {
+			"auth": "kMmI3Yl...iN=="
+		},
+		"dialog-docker-public-registry.bintray.io": {
+			"auth": "3Y2M0Qg...OG=="
+		}
+	}
+}
+
 #### Define variables for your installation
 Copy `vars.example.yml`
 ```bash
@@ -38,9 +56,9 @@ $> cp vars.example.yml vars.yml
 Edit `vars.yml` as you like
 
 ##### Variables:
-If you do not plan to use any variable, leave the predefined value.
+You MUST define main variables to successfully complete setup process.
 
-##### Main vars
+##### Main Variables
 `server_license` - License key for Dialog Server.
 
 `project_name: "My EE"` - External name which will be displayed in the email messages, contact books, etc.
@@ -122,24 +140,6 @@ STRONG RECOMENTED use it
 
 `letsencrypt_email: email@example.com` - Email address for important account notifications
 
-#### Getting access to repository
-Write a request to gain access to mail - services@dlg.im.
-
-In response you will receive json file. Save it in your home directory as ~/.docker/config.json or append to existing one.
-```json
-# ~/.docker/config.json content
-
-{
-	"auths": {
-		"dialog-docker-ee-registry.bintray.io": {
-			"auth": "kMmI3Yl...iN=="
-		},
-		"dialog-docker-public-registry.bintray.io": {
-			"auth": "3Y2M0Qg...OG=="
-		}
-	}
-}
-
 
 ```
 
@@ -175,17 +175,25 @@ Use this password for login to dashboard `http://<base_url>/dash`
 
 ```admin / <password>```
 
-### Dashboard overview
+### Add new users
 TL;DR
 
-* Create new users in dashboard
-* Set passwords to users through GraphQL
+Open http://<base_url>/dash
+
+![alt text](screenshots/users1.png "New user")
+
+![alt text](screenshots/users2.png "Add contact")
+
+If you have configured SMTP server then new user will receive e-mail with password. Email address must be in user contacts.
+
+Or you can set passwords to users through GraphQL
+
+![alt text](screenshots/gql.png "GraphQL")
 ```
 mutation {
 	users_set_password( user_id: <ID>, password: "password")
 }
 ```
-TODO
 
 ## Connect to Dialog Server
 Web app available on `http://<base-url>`
