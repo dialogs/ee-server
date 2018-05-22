@@ -59,8 +59,8 @@ fi
 
 if [ $(program_is_installed nginx) == 0 ]; then
   echo -e "\nInstall NGINX"
-  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "letsencrypt"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
 fi
 
 if [ $(program_is_installed haproxy) == 0 ]; then
