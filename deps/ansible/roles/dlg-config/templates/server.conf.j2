@@ -11,7 +11,7 @@ modules.security.server-keys.0.private = "/opt/docker/keys/dialog.private"
 
 modules.crypto.server-key.secret = "a7a91bbe84f15da821a5421d2a96c93c575138dee2bbaca11a818e5aeed72a49"
 modules.crypto.server-key.public = "f61788dd49d78f061a48adf45128be1693f6099c52d3cb9ae69f87b7ba11620c"
-modules.crypto.storage = "cassandra"
+modules.crypto.storage = "postgresql"
 
 # Tools
 modules.metrics.consumers = ["im.dlg.metrics.PrometheusConsumer"]
@@ -83,41 +83,13 @@ services.email.smtp.tls = {{ smtp_tls | lower }}
 {% endif %}
 
 
-# Databases
-modules.messaging.history.storage = "{{ history_storage }}"
-modules.sequence.storage = "{{ sequence_storage }}"
-modules.storage.persistence.journal = "{{ persistence_journal }}"
-modules.storage.persistence.snapshot = "{{ persistence_snapshot }}"
-
-
-## PG
+# PG
 services.postgresql.host = "{{ pg_host }}"
 services.postgresql.port = {{ pg_port }}
 services.postgresql.db = "{{ pg_db }}"
 services.postgresql.user = "{{ pg_user }}"
 services.postgresql.password = "{{ pg_password }}"
 services.postgresql.numThreads = {{ pg_numThreads }}
-
-
-## Cassandra
-{% if cass_username != "" and cass_password != "" %}
-services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.credentials.username = "{{ cass_username }}"
-services.cassandra.credentials.password = "{{ cass_password }}"
-
-services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.journal.authentication.username = "{{ cass_username }}"
-services.cassandra.journal.authentication.password = "{{ cass_password }}"
-
-services.cassandra.snapshot.contact-points = {{ cass_contact_points }}
-services.cassandra.snapshot.authentication.username = "{{ cass_username }}"
-services.cassandra.snapshot.authentication.password = "{{ cass_password }}"
-
-{% else %}
-services.cassandra.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.journal.contact-points = {{ cass_contact_points | to_nice_json }}
-services.cassandra.snapshot.contact-points = {{ cass_contact_points | to_nice_json }}
-{% endif %}
 
 
 # Voice
