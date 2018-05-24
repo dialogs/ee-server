@@ -33,9 +33,9 @@ In response you will receive dialog-setup.zip file.
 Please find dialog-setup.zip attached file in reply email on your request to services@dlg.im.
 
 It contains:
-prepare.sh - Shell-script executes initial system prepare and then run main setup programm.
-license.txt - Contains your license key in plaintext to use during the prepare.sh script work.
-ee-registry.json - The access to our repository that script will use.
+`prepare.sh` - Shell-script executes initial system prepare and then run main setup programm.
+`license.txt` - Contains your license key in plaintext to use during the prepare.sh script work.
+`ee-registry.json` - The access to our repository that script will use.
 
 Put dialog-setup.zip on server with clean Debian (8 or 9) install in home directory under the root user (/root/)
 
