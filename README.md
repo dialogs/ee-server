@@ -24,35 +24,9 @@ In response you will receive license base64 string.
 
 #### Preparations
 
-* Key for access to docker registry (self-hosted install)
-
 Write your request to e-mail - services@dlg.im.
 
-In response you will receive json file.
-
-#### Getting access to repository
-Write a request to gain access to email address - services@dlg.im.
-
-In response you will receive json file. Save it in your home directory as ~/.docker/config.json (/root/.docker/config.json #for root user) or append to existing one.
-```json
-# ~/.docker/config.json example content
-
-{
-	"auths": {
-		"dialog-docker-ee-registry.bintray.io": {
-			"auth": "kMmI3Yl...iN=="
-		},
-		"dialog-docker-public-registry.bintray.io": {
-			"auth": "3Y2M0Qg...OG=="
-		}
-	}
-}
-
-#### Define variables for your installation
-Copy `vars.example.yml`
-```bash
-$> cp vars.example.yml vars.yml
-```
+In response you will receive dialog-setup.zip file.
 
 ##### Quick install
 
