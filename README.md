@@ -183,6 +183,7 @@ mutation {
 	users_set_password( user_id: ID, password: "password")
 }
 ```
+You can find user ID here:
 
 ![alt text](screenshots/user_id.png "User ID can be found here")
 
