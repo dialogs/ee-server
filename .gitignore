@@ -6,3 +6,5 @@ images/
 conf/
 
 vars\.yml
+
+.DS_Store
