@@ -33,6 +33,7 @@ In response you will receive dialog-setup.zip file.
 Please find dialog-setup.zip attached file in reply email on your request to services@dlg.im.
 
 It contains:
+
 `prepare.sh` - Shell-script executes initial system prepare and then run main setup programm.
 
 `license.txt` - Contains your license key in plaintext to use during the prepare.sh script work.
