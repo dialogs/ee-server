@@ -53,7 +53,23 @@ Copy `vars.example.yml`
 ```bash
 $> cp vars.example.yml vars.yml
 ```
-Edit `vars.yml` as you like
+
+##### Quick install
+
+Please find dialog-setup.zip attached file in reply email on your request to services@dlg.im.
+
+It contains:
+prepare.sh - Shell-script executes initial system prepare and then run main setup programm.
+license.txt - Contains your license key in plaintext to use during the prepare.sh script work.
+ee-registry.json - The access to our repository that script will use.
+
+Put dialog-setup.zip on server with clean Debian (8 or 9) install in home directory under the root user (/root/)
+
+To start installation process, copy and execute the following line in the server console under the root user:
+
+```cd ~; apt-get install -y unzip; unzip dialog-setup.zip; bash prepare.sh```
+
+##### Advanced manual installation with options define
 
 ##### Variables:
 You MUST define main variables to successfully complete setup process.
@@ -94,7 +110,6 @@ Is used to send password to the user.
 `ad_password: ""` - User password
 
 `ad_sync: "10s"` - sync interval
-
 
 
 ##### S3 (optional)
@@ -191,9 +206,11 @@ Or you can set passwords to users through GraphQL
 ![alt text](screenshots/gql.png "GraphQL")
 ```
 mutation {
-	users_set_password( user_id: <ID>, password: "password")
+	users_set_password( user_id: ID, password: "password")
 }
 ```
+
+![alt text](screenshots/user_id.png "User ID can be found here")
 
 ## Connect to Dialog Server
 Web app available on `http://<base-url>`
