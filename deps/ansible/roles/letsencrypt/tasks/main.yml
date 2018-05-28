@@ -6,5 +6,5 @@
 - debug:
     var: cert_dir
 
-- include_tasks: install.sh
+- include_tasks: install.yml
   when: not cert_dir.stat.exists
