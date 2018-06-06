@@ -4,7 +4,7 @@
 
 cd ~
 mkdir -p ~/.docker
-cp ~/ee-registry.json ~/.docker/config.json
+cp ~/ee-server.json ~/.docker/config.json
 
 apt-get update
 apt-get install -y git unzip
