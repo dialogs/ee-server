@@ -50,46 +50,22 @@ if [ ! $(which ansible-playbook) ]; then
     yum -y install bzip2 file findutils git gzip hg svn sudo tar which unzip xz zip libselinux-python
     [ -n "$(yum search procps-ng)" ] && yum -y install procps-ng || yum -y install procps
   elif [ -f /etc/debian_version ] || [ grep -qi ubuntu /etc/lsb-release ] || grep -qi ubuntu /etc/os-release; then
-    apt-get update
     # Install via package
-    # apt-get update && \
-    # apt-get install --no-install-recommends -y software-properties-common && \
-    # apt-add-repository ppa:ansible/ansible && \
-    # apt-get update && \
-    # apt-get install -y ansible
 
-    # Install required Python libs and pip
-    apt-get install -y  python-pip python-yaml python-jinja2 python-httplib2 python-paramiko python-pkg-resources
-    [ -n "$( apt-cache search python-keyczar )" ] && apt-get install -y  python-keyczar
-    if ! apt-get install -y git ; then
-      apt-get install -y git-core
-    fi
-    # If python-pip install failed and setuptools exists, try that
-    if [ -z "$(which pip)" -a -z "$(which easy_install)" ]; then
-      apt-get -y install python-setuptools
-      easy_install pip
-    elif [ -z "$(which pip)" -a -n "$(which easy_install)" ]; then
-      easy_install pip
-    fi
-    # If python-keyczar apt package does not exist, use pip
-    [ -z "$( apt-cache search python-keyczar )" ] && sudo pip install python-keyczar
+    echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list
 
-    # Install passlib for encrypt
-    apt-get install -y build-essential
-    apt-get install -y python-all-dev python-mysqldb sshpass && pip install pyrax pysphere boto passlib dnspython
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+    apt-get update
+    apt-get install -y ansible
+    apt-get install -y python-pip
 
-    # Install Ansible module dependencies
-    apt-get install -y bzip2 file findutils gzip mercurial procps subversion sudo tar debianutils unzip xz-utils zip python-selinux libssl1.0.0 libffi-dev libssl-dev
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
   else
     echo 'WARN: Could not detect distro or distro unsupported'
     echo 'WARN: Trying to install ansible via pip without some dependencies'
     echo 'WARN: Not all functionality of ansible may be available'
   fi
-
-  mkdir /etc/ansible/
-  echo -e '[local]\nlocalhost\n' > /etc/ansible/hosts
-  pip install ansible
 
   if [ -f /etc/centos-release ] || [ -f /etc/redhat-release ] || [ -f /etc/oracle-release ] || [ -f /etc/system-release ] || grep -q 'Amazon Linux' /etc/system-release; then
     # Fix for pycrypto pip / yum issue
