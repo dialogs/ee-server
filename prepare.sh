@@ -10,6 +10,12 @@ apt-get update
 apt-get install -y git unzip
 git clone https://github.com/dialogs/ee-server.git
 cd ee-server
+
+# switch to branch ubuntu if os is ubuntu
+if [ $(grep -i ubuntu /etc/issue | awk '{print $1}') == "Ubuntu" ]
+    then git checkout ubuntu
+fi
+
 cp vars.example.yml vars.yml
 
 pline='project_name: "My EE"'
