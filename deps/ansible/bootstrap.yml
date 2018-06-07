@@ -20,7 +20,8 @@
     - role: letsencrypt
       letsencrypt_cert_domains:
         - "{{ base_url }}"
-      letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
+          #letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"' #not working in Ubuntu
+      letsencrypt_renewal_command_args: '--renew-hook "service nginx restart"'
       letsencrypt_email: "{{ letsencrypt_email }}"
       when: use_letsencrypt and use_tls
       tags: 'letsencrypt'
