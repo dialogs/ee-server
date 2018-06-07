@@ -1,7 +1,8 @@
 ---
-- name: reload unit
-  become: true
-  command: systemctl daemon-reload
+# not for ubuntu
+#- name: reload unit
+#  become: true
+#  command: systemctl daemon-reload
 
 - name: restart docker
   service:
