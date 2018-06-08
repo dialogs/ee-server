@@ -55,11 +55,11 @@ if [ ! $(which ansible-playbook) ]; then
     echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list
 
     # install certbot for letsencrypt
-    add-apt-repository -y ppa:certbot/certbot
+    #add-apt-repository -y ppa:certbot/certbot
 
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
     apt-get update
-    apt-get install -y letsencrypt
+    #apt-get install -y letsencrypt
     apt-get install -y ansible
     apt-get install -y python-pip
 

@@ -16,15 +16,13 @@
       dhparam_size: 1024
       dhparam_file: "/etc/ssl/dhparam.pem"
       tags: 'nginx'
-    
-    - role: letsencrypt
-      letsencrypt_cert_domains:
-        - "{{ base_url }}"
-          #letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"' #not working in Ubuntu
-      letsencrypt_renewal_command_args: '--renew-hook "service nginx restart"'
-      letsencrypt_email: "{{ letsencrypt_email }}"
-      when: use_letsencrypt and use_tls
-      tags: 'letsencrypt'
+   
+    - role: geerlingguy.certbot
+      certbot_auto_renew: true
+      certbot_auto_renew_user: "{{ ansible_user }}"
+      certbot_auto_renew_hour: 3
+      certbot_auto_renew_minute: 30
+      certbot_auto_renew_options: "--quiet --no-self-upgrade" 
     
     - role: haproxy
       frontend_mode: 'tcp'
