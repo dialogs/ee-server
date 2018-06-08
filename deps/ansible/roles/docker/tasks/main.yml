@@ -27,7 +27,6 @@
     src: docker.j2.service
     dest: /usr/lib/systemd/system/docker.service
   notify:
-    - reload unit
     - restart docker
 
 - meta: flush_handlers
