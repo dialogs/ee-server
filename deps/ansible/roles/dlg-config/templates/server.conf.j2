@@ -104,7 +104,8 @@ modules.webrtc.ice-servers.1.credential = "dialog"
 # Push server
 modules.push.provider = "im.dlg.server.push.StreamingPushProvider"
 modules.push.host = push.dlg.im
-modules.push.use-tls = false
-modules.push.port = 8010
+modules.push.use-tls = true
+modules.push.enable-encryption = true
+modules.push.port = 4020
 
 {{ dlg_custom_conf}}
