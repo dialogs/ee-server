@@ -60,6 +60,10 @@ fi
 if [ $(program_is_installed nginx) == 0 ]; then
   echo -e "\nInstall NGINX"
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
+fi
+
+if [ $(program_is_installed letsencrypt) == 0 ]; then
+  echo -e "\nInstall LetsEncrypt"
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "letsencrypt"
 fi
 
