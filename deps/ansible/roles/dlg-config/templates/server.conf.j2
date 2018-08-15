@@ -67,6 +67,8 @@ modules.active-directory.resync-interval = {{ ad_sync }}
 {% else %}
 modules.validation.username-password.provider = "im.dlg.server.auth.validation.InternalPasswordValidationProvider"
 modules.internal-ee.extension = "im.dlg.contrib.enterprise.InternalExtension"
+modules.validation.shortname.min-length = 2
+modules.validation.name.min-length = 2
 {% endif %}
 
 
