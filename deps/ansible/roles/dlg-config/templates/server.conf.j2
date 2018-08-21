@@ -6,8 +6,8 @@ http.base-uri = "{{ http_scheme }}://{{ base_url }}"
 # Secure
 secret = "mysupersecuresecret"
 license = "{{ server_license }}"
-modules.security.server-keys.0.public = "/opt/docker/keys/dialog.pub"
-modules.security.server-keys.0.private = "/opt/docker/keys/dialog.private"
+#modules.security.server-keys.0.public = "/opt/docker/keys/dialog.pub"
+#modules.security.server-keys.0.private = "/opt/docker/keys/dialog.private"
 
 modules.crypto.server-key.secret = "a7a91bbe84f15da821a5421d2a96c93c575138dee2bbaca11a818e5aeed72a49"
 modules.crypto.server-key.public = "f61788dd49d78f061a48adf45128be1693f6099c52d3cb9ae69f87b7ba11620c"
@@ -22,7 +22,8 @@ modules.admin.new-password-message.template = "Your new password is $$password$$
 #modules.groups.invite-domain = "{{ http_scheme }}://{{ base_url }}"
 #modules.groups.invite-url-prefix = "/@/joinchat/"
 #modules.groups.resolve-url-preifx = "/@"
-
+#modules.groups.share-invite-url = "{{ http_scheme }}://{{ base_url }}/dl"
+#modules.config.extensions = []
 
 # Clustering
 single-mode = true
@@ -51,6 +52,9 @@ services.aws.s3.path-style-access = "false"
 
 # Users
 modules.users.allow-username-change = true
+#modules.groups.auto-join = []
+#modules.discover.peers = []
+#modules.users.profile.json-schema-manager.schema-url = "file:///opt/docker//conf/schema.json"
 
 {% if ad_use %}
 # AD
