@@ -51,6 +51,14 @@ services.aws.s3.path-style-access = "false"
 {% endif %}
 
 # Users
+# Activasions
+modules.activation.repeat-limit = 1m
+modules.activation.code-expiration = 1 day
+modules.activation.code-attempts = 3
+modules.activation.internal.sender-user-id = 10
+modules.activation.internal.online-time-window = 10m
+modules.activation.internal.message-template = "Your Dialog activation code: $$CODE$$"
+
 modules.users.allow-username-change = true
 #modules.groups.auto-join = []
 #modules.discover.peers = []
@@ -69,12 +77,20 @@ modules.active-directory.power-user-password = "{{ ad_password }}"
 modules.active-directory.sync-requests-interval = {{ ad_sync }}
 modules.active-directory.resync-interval = {{ ad_sync }}
 {% else %}
+modules.activation.providers.internal = "im.dlg.server.auth.activation.internal.InternalCodeProvider"
+modules.activation.providers.smtp = "im.dlg.server.auth.activation.smtp.SMTPProvider"
 modules.validation.username-password.provider = "im.dlg.server.auth.validation.InternalPasswordValidationProvider"
-modules.internal-ee.extension = "im.dlg.contrib.enterprise.InternalExtension"
+#modules.enterprise.extension = "im.dlg.contrib.enterprise.InternalExtension"
+modules.enterprise.extension = "im.dlg.contrib.enterprise.AutojoinExtension"
+modules.users.profile.json-schema-manager.schema-url = "file:///opt/docker/conf/schema.json "
 modules.validation.shortname.min-length = 2
 modules.validation.name.min-length = 2
 {% endif %}
-
+#modules.groups.auto-join = [id1, id2]
+#modules.discover.peers = [
+#  { type: "group", id: id1 }, # id1
+#  { type: "private", id: id2 }, # id2
+#]
 
 {% if smtp_use %}
 # SMTP

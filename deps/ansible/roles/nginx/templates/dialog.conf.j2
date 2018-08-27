@@ -38,7 +38,7 @@ server {
   location / {
     proxy_read_timeout        30s;
     proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_pass                http://localhost:{{ web_app_port }};
+    proxy_pass                http://127.0.0.1:{{ web_app_port }};
   }
 
   location /dash {
@@ -46,26 +46,46 @@ server {
     rewrite                   ^/dash$ {{ http_scheme }}://{{ base_url }}/dash/ permanent;
     rewrite                   ^/dash/(.*) /$1 break;
     proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_pass                http://localhost:{{ dashboard_port }}/;
+    proxy_pass                http://127.0.0.1:{{ dashboard_port }}/;
   }
 
   location /config {
     proxy_set_header          Host {{ base_url }};
     proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_pass                http://localhost:{{ dashboard_port }};
+    proxy_pass                http://127.0.0.1:{{ dashboard_port }};
   }
 
   location /v1 {
     proxy_set_header          Host {{ base_url }};
     proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_pass                http://localhost:9090;
+    proxy_pass                http://127.0.0.1:9090;
   }
 
   location /api {
     proxy_set_header          Host {{ base_url }};
     proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_pass                http://localhost:9090;
+    proxy_pass                http://127.0.0.1:9090;
   }
+
+#  location ~ ^/(?:@/)?joinchat/(.*)$ {
+#    proxy_pass                http://127.0.0.1:8081/$1;
+#    proxy_set_header          Host            $http_host;
+#    proxy_set_header          X-Real-IP       $remote_addr;
+#    proxy_set_header          X-NginX-Proxy   true;
+#    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+#    proxy_http_version        1.1;
+#    proxy_redirect            off;
+#    }
+
+#  location ~ ^/@/?(.*)$ {
+#    proxy_pass                http://127.0.0.1:8081/$1;
+#    proxy_set_header          Host            $http_host;
+#    proxy_set_header          X-Real-IP       $remote_addr;
+#    proxy_set_header          X-NginX-Proxy   true;
+#    proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+#    proxy_http_version        1.1;
+#    proxy_redirect            off;
+#    }
 }
 
 server {
@@ -106,6 +126,6 @@ server {
     proxy_http_version        1.1;
     proxy_set_header          Upgrade $http_upgrade;
     proxy_set_header          Connection "upgrade";
-    proxy_pass                http://localhost:9080;
+    proxy_pass                http://127.0.0.1:9080;
   }
 }
