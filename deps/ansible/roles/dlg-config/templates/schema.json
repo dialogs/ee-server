@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "email": {
+      "type": "string",
+      "title": "Рабочая почта"
+    },
+    "position": {
+      "type": "string",
+      "title": "Должность"
+    }
+  }
+}

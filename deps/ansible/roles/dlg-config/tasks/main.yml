@@ -48,3 +48,8 @@
   template:
     src: templates/logback.xml
     dest: "{{ conf_dir }}/logback.xml"
+
+- name: Create schema.json
+  template:
+    src: templates/schema.json
+    dest: "{{ conf_dir }}/schema.json"

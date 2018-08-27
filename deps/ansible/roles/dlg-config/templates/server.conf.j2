@@ -2,7 +2,6 @@
 project-name = "{{ project_name }}"
 http.base-uri = "{{ http_scheme }}://{{ base_url }}"
 
-
 # Secure
 secret = "mysupersecuresecret"
 license = "{{ server_license }}"
@@ -23,12 +22,10 @@ modules.admin.new-password-message.template = "Your new password is $$password$$
 #modules.groups.invite-url-prefix = "/@/joinchat/"
 #modules.groups.resolve-url-preifx = "/@"
 #modules.groups.share-invite-url = "{{ http_scheme }}://{{ base_url }}/dl"
-#modules.config.extensions = []
 
 # Clustering
 single-mode = true
 modules.reconfiguration.storage = im.dlg.server.config.contrib.NoOpStorage
-
 
 # Files
 modules.files.adapter = "im.dlg.server.file.local.LocalFileStorageAdapter"
@@ -51,18 +48,7 @@ services.aws.s3.path-style-access = "false"
 {% endif %}
 
 # Users
-# Activasions
-modules.activation.repeat-limit = 1m
-modules.activation.code-expiration = 1 day
-modules.activation.code-attempts = 3
-modules.activation.internal.sender-user-id = 10
-modules.activation.internal.online-time-window = 10m
-modules.activation.internal.message-template = "Your Dialog activation code: $$CODE$$"
-
 modules.users.allow-username-change = true
-#modules.groups.auto-join = []
-#modules.discover.peers = []
-#modules.users.profile.json-schema-manager.schema-url = "file:///opt/docker//conf/schema.json"
 
 {% if ad_use %}
 # AD
@@ -86,10 +72,10 @@ modules.users.profile.json-schema-manager.schema-url = "file:///opt/docker/conf/
 modules.validation.shortname.min-length = 2
 modules.validation.name.min-length = 2
 {% endif %}
-#modules.groups.auto-join = [id1, id2]
+#modules.groups.auto-join = [id1, id2] # auto join in groups id
 #modules.discover.peers = [
-#  { type: "group", id: id1 }, # id1
-#  { type: "private", id: id2 }, # id2
+#  { type: "group", id: id1 }, # id1 (group or channel)
+#  { type: "private", id: id2 }, # id2 (user or bot)
 #]
 
 {% if smtp_use %}
@@ -104,7 +90,6 @@ services.email.smtp.password = "{{ smtp_password }}"
 services.email.smtp.tls = {{ smtp_tls | lower }}
 {% endif %}
 
-
 # PG
 services.postgresql.host = "{{ pg_host }}"
 services.postgresql.port = {{ pg_port }}
@@ -113,7 +98,6 @@ services.postgresql.user = "{{ pg_user }}"
 services.postgresql.password = "{{ pg_password }}"
 services.postgresql.numThreads = {{ pg_numThreads }}
 
-
 # Voice
 modules.webrtc.ice-servers.0.url = "turn:{{ base_url }}:3478?transport=tcp"
 modules.webrtc.ice-servers.0.username = "dialog"
@@ -121,7 +105,6 @@ modules.webrtc.ice-servers.0.credential = "dialog"
 modules.webrtc.ice-servers.1.url = "turn:{{ base_url }}:3478?transport=udp"
 modules.webrtc.ice-servers.1.username = "dialog"
 modules.webrtc.ice-servers.1.credential = "dialog"
-
 
 # Push server
 modules.push.provider = "im.dlg.server.push.StreamingPushProvider"
