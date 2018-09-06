@@ -1,8 +1,9 @@
 #!/bin/bash
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root!  ¯\_(ツ)_/¯" 1>&2
+   echo "This script must be run as root!" 1>&2
    exit 1
 fi
+# Debian tested, TODO:CentOS. >>
 iface_check=`ip link show | awk ' /2: / {print $2}'`
 iface=${iface_check::-1}	
 echo -e "\nThis script now will help you to configure machine and start Dialog Enterprise Server \c "
@@ -19,38 +20,38 @@ case "$choice" in
         read st_ip
         if [[ $st_ip =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?)$ ]]; then
           echo -e "\nIP of virtual machine: $st_ip"
-        else echo -e "\n$st_ip is not valid IP address ¯\_(ツ)_/¯"; exit 1
+        else echo -e "\n$st_ip is not valid IP address!"; exit 1
         fi
 	echo -e " "
         echo -e "\nPlease enter the netmask (like 255.255.255.0): \c "
         read st_msk
 	if [[ $st_msk =~ ^(((255\.){3}(255|254|252|248|240|224|192|128|0+))|((255\.){2}(255|254|252|248|240|224|192|128|0+)\.0)|((255\.)(255|254|252|248|240|224|192|128|0+)(\.0+){2})|((255|254|252|248|240|224|192|128|0+)(\.0+){3}))$ ]]; then
           echo -e "\nNetmask of virtual network: $st_msk"
-        else echo -e "\n$st_msk is not valid network mask ¯\_(ツ)_/¯"; exit 1
+        else echo -e "\n$st_msk is not valid network mask!"; exit 1
         fi
 	echo -e " "
         echo -e "\nPlease enter the gateway ip (like 123.123.123.123): \c "
         read st_gw
         if [[ $st_gw =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?)$ ]]; then
           echo -e "\nGateway of virtual network: $st_gw"
-        else echo -e "\n$st_gw is not valid IP address ¯\_(ツ)_/¯"; exit 1
+        else echo -e "\n$st_gw is not valid IP address!"; exit 1
         fi
 	echo -e " "
         echo -e "\nPlease enter the first DNS ip (like 123.123.123.123): \c "
         read st_dns1
         if [[ $st_dns1 =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?)$ ]]; then
           echo -e "\nDNS1 of virtual network: $st_dns1"
-        else echo -e "\n$st_dns1 is not valid IP address ¯\_(ツ)_/¯"; exit 1
+        else echo -e "\n$st_dns1 is not valid IP address!"; exit 1
         fi
 	echo -e " "
         echo -e "\nPlease enter the second DNS ip (like 123.123.123.123): \c "
         read st_dns2
         if [[ $st_dns2 =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?)$ ]]; then
           echo -e "\nDNS2 of virtual network: $st_dns2"
-        else echo -e "\n$st_dns2 is not valid IP address ¯\_(ツ)_/¯"; exit 1
+        else echo -e "\n$st_dns2 is not valid IP address!"; exit 1
         fi;;
   * ) echo -e " "
-      echo -e "\nPlease answer Y/y or N/n ¯\_(ツ)_/¯";;
+      echo -e "\nPlease answer Y/y or N/n";;
 esac
 
 
@@ -106,6 +107,7 @@ if [[ "$st_ip" = "$st_set" ]]; then
 	echo -e " "
 	exit 1
 fi
+#  >> Debian tested, TODO:CentOS.
 fi
 ip=`ip addr list $iface | grep "  inet " | head -n 1 | cut -d " " -f 6 | cut -d / -f 1`
 echo -e "\nPlease enter your server external ip or domain name (press Enter if it correct) ($ip): \c "
@@ -192,9 +194,76 @@ $tlsline
 $leline
 letsencrypt_email: $email
 
-" > /home/dialog/ee-server/vars.yml
+" > vars.yml
 
-cd /home/dialog/ee-server
+ set -e
+
+function program_is_installed {
+  # set to 1 initially
+  local return_=1
+  # set to 0 if not found
+  type $1 >/dev/null 2>&1 || { local return_=0; }
+  # return value
+  echo "$return_"
+}
+
+function echo_fail {
+  # echo first argument in red
+  printf "✘ ${1}"
+}
+
+# display a message in green with a tick by it
+# example
+# echo echo_fail "Yes"
+function echo_pass {
+  # echo first argument in green
+  printf "✔ ${1}"
+}
+
+# echo pass or fail
+# example
+# echo echo_if 1 "Passed"
+# echo echo_if 0 "Failed"
+function echo_if {
+  if [ $1 == 1 ]; then
+    echo_pass $2
+  else
+    echo_fail $2
+  fi
+}
+
+
+echo -e "\nCheck installed software"
+echo "ansible         $(echo_if $(program_is_installed ansible))"
+echo "docker          $(echo_if $(program_is_installed docker))"
+echo "docker-compose  $(echo_if $(program_is_installed docker-compose))"
+echo "nginx           $(echo_if $(program_is_installed nginx))"
+echo "haproxy         $(echo_if $(program_is_installed haproxy))"
+
+if [ $(program_is_installed ansible) == 0 ]; then
+  echo -e "\nInstall ansible"
+  /bin/bash deps/ansible-install.sh
+fi
+
+if [ $(program_is_installed docker) == 0 ]; then
+  echo -e "\nInstall docker"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker"
+fi
+
+if [ $(program_is_installed docker-compose) == 0 ]; then
+  echo -e "\nInstall docker-compose"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker-compose"
+fi
+
+if [ $(program_is_installed nginx) == 0 ]; then
+  echo -e "\nInstall NGINX"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "nginx"
+fi
+
+if [ $(program_is_installed haproxy) == 0 ]; then
+  echo -e "\nInstall and configure haproxy"
+  ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "haproxy"
+fi
 
 if [[ $tlsline =~ 'use_tls: true' ]]; then
   s='s'
@@ -232,7 +301,7 @@ echo -e "\nCreate admin user..."
 ./create-admin.sh admin
 
 echo -e "\n ********** All done! ********** "
-pass="`cat /home/dialog/ee-server/admin.txt |  cut -c 27-`"
+pass="`cat admin.txt | cut -c 27- | sed 's/\`$//'`"
 echo -e "
   invites:
     image: quay.io/dlgim/ee-invite:latest
@@ -268,12 +337,12 @@ echo -e "\n
                 Admin dashboard:
                   http$s://$ip_srv/dash/
                   login: admin
-                  password: ${pass::-2}
+                  password: $pass
 -------------------------------------------------------------------
 	       
-" > /home/dialog/info-$ip_srv.txt
-echo -e "$(</home/dialog/info-$ip_srv.txt )"
-echo -e "\n This information was saved in file echo -e /home/dialog/info-$ip_srv.txt"
+" > info-$ip_srv.txt
+echo -e "$(<info-$ip_srv.txt )"
+echo -e "\n This information was saved in file echo -e $DIRSTACK/info-$ip_srv.txt"
 exit 1
 
 
