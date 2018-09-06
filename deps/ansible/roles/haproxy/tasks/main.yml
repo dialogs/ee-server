@@ -31,6 +31,12 @@
     default_release: "{{ansible_distribution_release}}"
   when: ansible_distribution_release == 'stretch'
 
+- name: Install HAProxy (CentOS/RedHat)
+  yum:
+    name: "haproxy"
+    state: present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
 - include_tasks: letsencrypt_certs.yml
   when: use_letsencrypt and use_tls
 
