@@ -298,9 +298,10 @@ done
 echo -e "\nServer is ready."
 
 echo -e "\nCreate admin user..."
-./create-admin.sh admin
+docker-compose exec dialog-server /opt/docker/bin/cli create-user -u admin -n admin 1> /dev/null
+id=`docker-compose exec postgresql su - postgres -c "echo \"select id,name from users where name='admin'\" | psql -d dialog" | grep admin | awk '{print $1}'` 2> /dev/null
+docker-compose exec dialog-server /opt/docker/bin/cli admin-grant -u $id | grep "Admin granted. Password: " | tee admin.txt 1> /dev/null
 
-echo -e "\n ********** All done! ********** "
 pass="`cat admin.txt | cut -c 27- | sed 's/\`$//'`"
 echo -e "
   invites:
@@ -315,6 +316,8 @@ echo -e "
       - dialog-server
 " >> docker-compose.yml
 docker-compose up -d 2> /dev/null
+
+echo -e "\n ********** All done! ********** "
 echo -e "\n
 -------------------------------------------------------------------
     Server endpoints for clients:
@@ -337,12 +340,12 @@ echo -e "\n
                 Admin dashboard:
                   http$s://$ip_srv/dash/
                   login: admin
-                  password: $pass
+                  password: ${pass::-2}
 -------------------------------------------------------------------
 	       
 " > info-$ip_srv.txt
 echo -e "$(<info-$ip_srv.txt )"
-echo -e "\n This information was saved in file echo -e $DIRSTACK/info-$ip_srv.txt"
+echo -e "\nThis information was saved in file $DIRSTACK/info-$ip_srv.txt"
 exit 1
 
 
