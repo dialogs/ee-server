@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 # Debian tested, TODO:CentOS. >>
 iface_check=`ip link show | awk ' /2: / {print $2}'`
-iface=${iface_check::-1}	
+iface=`echo $iface_check | sed 's/:$//'`
 echo -e "\nThis script now will help you to configure machine and start Dialog Enterprise Server \c "
 echo -e "\nPlease answer some questions: \c "
 echo -e "\n "
