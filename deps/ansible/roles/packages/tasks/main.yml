@@ -1,5 +1,5 @@
 ---
-- name: Install packages
+- name: Install packages on Debian/Ubuntu
   apt:
     name:  "{{ item }}"
     state: present
@@ -9,3 +9,14 @@
   with_items:
     - netcat
     - curl
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Install packages on CentOS/RedHat
+  yum:
+    name:  "{{ item }}"
+    state: present
+    update_cache:       true
+  with_items:
+    - nmap-ncat
+    - curl
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
