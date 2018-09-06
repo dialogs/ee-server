@@ -80,7 +80,10 @@ if [ ! $(which ansible-playbook) ]; then
 
     # Install Ansible module dependencies
     apt-get install -y bzip2 file findutils gzip mercurial procps subversion sudo tar debianutils unzip xz-utils zip python-selinux libssl1.0.0 libffi-dev libssl-dev
-
+    
+    # Upgrade pip
+    pip install --upgrade pip
+    
   else
     echo 'WARN: Could not detect distro or distro unsupported'
     echo 'WARN: Trying to install ansible via pip without some dependencies'
@@ -100,6 +103,8 @@ if [ ! $(which ansible-playbook) ]; then
       pip uninstall -y pycrypto
       yum erase -y python-crypto
       yum install -y python-crypto python-paramiko
+      # Upgrade pip
+      pip install --upgrade pip
     fi
   fi
 
