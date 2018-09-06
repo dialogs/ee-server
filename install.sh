@@ -250,6 +250,8 @@ if [ $(program_is_installed docker) == 0 ]; then
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker"
 fi
 
+pip uninstall -y docker-py; pip uninstall -y docker; pip install docker docker-py
+
 if [ $(program_is_installed docker-compose) == 0 ]; then
   echo -e "\nInstall docker-compose"
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --tags "docker-compose"
