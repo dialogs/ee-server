@@ -88,6 +88,9 @@ else
   ansible-playbook -i deps/ansible/vars.ini deps/ansible/bootstrap.yml --extra-vars="@vars.yml" --tags "dlg-config"
 fi
 
+echo -e "\nUpdate docker"
+pip uninstall -y docker-py; pip uninstall -y docker; pip install docker docker-py
+
 if [[ $server_runing == 1 ]]; then
   echo -e "\nRun services"
   docker-compose up -d
