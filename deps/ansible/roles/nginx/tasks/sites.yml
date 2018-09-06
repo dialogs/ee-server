@@ -3,6 +3,10 @@
     tcp_scheme: "tls"
     ws_scheme: "wss"
   when: use_tls
+  
+- set_fact:
+    nginx_user: nginx
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Create nginx.conf
   template:
@@ -26,6 +30,7 @@
     state: directory
   with_items:
     - dialog
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Create enable config dir
   file:
@@ -35,6 +40,7 @@
     state: directory
   with_items:
     - dialog
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Create site configs
   template:
