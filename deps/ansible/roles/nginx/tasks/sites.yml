@@ -17,6 +17,24 @@
     state: directory
   with_items:
     - dialog
+    
+- name: Create config dir
+  file:
+    path: "{{ nginx_conf_dir }}/sites-available"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    state: directory
+  with_items:
+    - dialog
+
+- name: Create enable config dir
+  file:
+    path: "{{ nginx_conf_dir }}/sites-enabled"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    state: directory
+  with_items:
+    - dialog
 
 - name: Create site configs
   template:
