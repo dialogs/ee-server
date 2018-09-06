@@ -10,6 +10,10 @@
     - nginx
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
+- set_fact:
+    nginx_user: nginx
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
 - name: Install NGINX on CentOS/RedHat
   yum:
     name:  "{{ item }}"
