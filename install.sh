@@ -313,7 +313,7 @@ echo -e "
       - 127.0.0.1:8081:8080
     links:
       - dialog-server
-" >> /home/dialog/ee-server/docker-compose.yml
+" >> docker-compose.yml
 docker-compose up -d 2> /dev/null
 echo -e "\n
 -------------------------------------------------------------------
