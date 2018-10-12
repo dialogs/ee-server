@@ -17,6 +17,8 @@ services:
   dialog-server:
     image: {{ dlg_image }}
     # command: /opt/docker/bin/dialog-enterprise -DDB_REPAIR=true
+    #extra_hosts:
+      #- "push.dlg.im:23.105.225.93"
     volumes:
       - ./conf:/opt/docker/conf:ro
       - ./data/server/files:/storage/files
